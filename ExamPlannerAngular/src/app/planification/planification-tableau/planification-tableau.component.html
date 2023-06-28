@@ -1,0 +1,190 @@
+<div class="container">
+   
+    <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div style="color: red;" class="col-md-3"> <b>Capacité limite :</b> {{capacite}} etudiants </div>
+
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div style="color: red;" class="col-md-3"> <b> * : </b> examen d'une heure </div>
+
+    </div>
+    <div id="titre">
+    <h1 class="mt-5" > Calendrier Des examens Semestre {{planif?.semestre}} Session {{ planif?.type_session }} {{
+        planif?.date_debut|date:'MMMM yyyy' }}</h1>
+</div>
+
+    <table class="table table-bordered mb-5 mt-5 text-center  canvas_div_pdf" id="table1">
+        <tr style="background-color:#FFF0F5">
+            <th>######</th>
+            <th class="bordure" *ngFor="let x of dates" [colSpan]="planif?.nb_seance_jour"> {{x|date:"EEEE dd MMMM
+                yyyy"|titlecase}} </th>
+        </tr>
+        <tr style="background-color:#F5F5F5">
+            <th>######</th>
+            <ng-container *ngFor="let x of dates">
+                <th *ngFor="let s of seancesPlanif" [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance}">
+                    {{s.heure_debut + "=>" + s.heure_fin}}</th>
+            </ng-container>
+        </tr>
+        <tr style="background-color:#F5F5F5">
+            <th>Nb etudiant /seance</th>
+            <ng-container *ngFor="let x of dates">
+                <th *ngFor="let s of seancesPlanif" [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance}">
+                    {{examenService.getNbEtudiantByJourSeance(examens,x,s)}}</th>
+            </ng-container>
+        </tr>
+        <ng-container *ngFor="let p of parcours">
+
+            <tr *ngFor="let n of niveauService.getNiveauByParcours1(p,niveaux) "
+                [ngClass]="{bordure_top:n.id_niv==niveauService.getNiveauByParcours1(p,niveaux)[0].id_niv}">
+
+                <th style="background-color:#FFF0F5">{{n.nom_niv}}</th>
+                <ng-container *ngFor="let d of dates">
+                    <td *ngFor="let s of seancesPlanif"
+                        [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance,dimanche:d.getDay()==0 ,examen:examenService.getExamenByJourSeance(examens, n, d, s)!=null,pratique: examenService.getExamenByJourSeance(examens, n, d, s)?.type_exam=='Pratique'}">
+                        <div *ngIf="examenService.getExamenByJourSeance(examens, n, d, s)!=null"
+                            (click)="onDetailExam(examenService.getExamenByJourSeance(examens, n, d, s))">
+                            {{examenService.getExamenByJourSeance(examens, n, d, s).nom_exam}}
+                            <span *ngIf="examenService.getExamenByJourSeance(examens, n, d, s).nb_heure==1">
+                              <b>  *   </b>
+                            </span>
+
+                        </div>
+
+
+                    </td>
+                </ng-container>
+
+            </tr>
+
+        </ng-container>
+
+
+
+
+
+
+
+    </table>
+  
+
+            <div class="row">
+                <div class="col-md-8"></div>
+                <button class="col btn btn-outline-warning tooltips btn-m " (click)="onExportExcel()"> <i class="fa fa-file-excel-o fa-xl"
+                    aria-hidden="true"></i> <b> Télecharger Excel</b></button>
+                <button class=" col btn btn-outline-success tooltips btn-m" (click)="downloadPDF()"> <i
+                        class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i> <b> Exporter PDF </b> </button>
+            </div>
+
+
+
+    <hr class="mt-5">
+    <h3> Affectation des salles </h3>
+
+
+
+    <table class="table table-bordered mb-5 mt-5 ">
+
+        <tr style="background-color:#F5F5F5 " class="text-center">
+            <th>Niveau</th>
+            <th>Matieres</th>
+            <th>Salle</th>
+
+        </tr>
+        <ng-container *ngFor="let p of parcours">
+            <ng-container *ngFor="let n of niveauService.getNiveauByParcours1(p,niveaux) ">
+                <tr class="bordure_top">
+
+                    <th *ngIf="examenService.getExamenByNiveau(examens,n).length!=0"
+                        [rowSpan]="examenService.getExamenByNiveau(examens,n).length" style="background-color:#FFF0F5"
+                        class="text-center">{{ n.nom_niv}}</th>
+                    <th *ngIf="examenService.getExamenByNiveau(examens,n).length==0" style="background-color:#FFF0F5"
+                        class="text-center">{{ n.nom_niv}}</th>
+
+                    <td *ngIf="examenService.getExamenByNiveau(examens,n)[0]" style="font-weight: bold;" class="examen"
+                        (click)="onDetailExam(examenService.getExamenByNiveau(examens,n)[0])">{{
+                        examenService.getExamenByNiveau(examens,n)[0]?.nom_exam}}</td>
+
+                    <td>
+                        <div *ngIf="examensSalles"class="ligne">
+                            <span 
+                                *ngFor="let examSalle of examen_salleService.getAllExamenSallesByExamen(examensSalles,examenService.getExamenByNiveau(examens,n)[0])">
+                                <span
+                                    *ngIf="examSalle.idSalle.type_salle.toLowerCase()==='laboratoire'.toLowerCase()">
+                                         Labo {{examSalle.idSalle.num_salle}} ,</span>
+                                <span
+                                    *ngIf="examSalle.idSalle.type_salle.toLowerCase()!='laboratoire'.toLowerCase()">
+                                         {{examSalle.idSalle.num_salle}} ,</span>
+
+                            </span>
+                        </div>
+                    </td>
+
+
+                </tr>
+
+                <tr *ngFor="let e of examenService.getExamenByNiveau(examens,n).slice(1)">
+                    <td *ngIf="e" style="font-weight: bold;" class="examen" (click)="onDetailExam(e)">{{e.nom_exam}}
+                    </td>
+                    <td>
+                        <span *ngIf="examensSalles" class="ligne">
+                            <span
+                                *ngFor="let examSalle of examen_salleService.getAllExamenSallesByExamen(examensSalles,e)">
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()==='laboratoire'.toLowerCase()">
+                                    Labo {{examSalle.idSalle.num_salle}} ,</span>
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()!='laboratoire'.toLowerCase()">
+                                    {{examSalle.idSalle.num_salle}} ,</span>
+                            </span>
+                        </span>
+                    </td>
+
+                </tr>
+
+
+            </ng-container>
+        </ng-container>
+
+
+
+
+    </table>
+
+    <div class="row" [hidden]="planif?.valide==true">
+        <div class="col"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-3"> <button class="col btn btn-outline-success tooltips btn-m" (click)="validePlanif()"><i
+                    class="fa fa-check-square" aria-hidden="true"></i> Valider la planification </button></div>
+    </div>
+    
+    <hr>
+
+    
+    <div class="modal fade" id="validePlanif" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+           <div class="modal-content">
+              <div class="modal-header">
+                 <h5 class="modal-title" id="deleteModelLabel">Valider Planification</h5>
+                 <button type="button" (click)="onDismiss('validePlanif')" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+                 </button>
+              </div>
+              <div class="modal-body">
+                 <p>Etes vous sure de vouloir valider la planification de la  Session {{ planif?.type_session }} {{
+                    planif?.date_debut|date:'MMMM yyyy' }} Semestre {{planif?.semestre}}  ?</p>
+                 <div class="modal-footer">
+                    <button type="button" (click)="onDismiss('validePlanif')" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button  class="btn btn-success" (click)="onValidePlanif()" data-dismiss="modal">Valider</button>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
+
+
+  
+   
+</div>

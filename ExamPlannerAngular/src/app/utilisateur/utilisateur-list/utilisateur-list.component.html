@@ -1,0 +1,426 @@
+<div class="container mt-4 mb-5">
+    <h2> Liste des utilisateurs</h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherMatieres(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Utilisateur..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <form [formGroup]="selectForm">
+                <div class="form-group ">
+
+
+                    <select class="form-select form-select-lg mb-3 form-control"
+                        (ngModelChange)="onChangeRole()" formControlName="select" id="select">
+                        <option [ngValue]="null" disabled>Choisir une fonction...</option>
+                        <option value="tous">------ Liste total des utilisateurs------</option>
+                        <option value="ens">------ Liste des enseignant------</option>
+                        <option value="ds">------ Liste total des directeurs de stages------</option>
+                        <option value="admin">------ Liste total des administrateurs------</option>
+
+
+                    </select>
+
+
+                </div>
+            </form>
+
+
+
+
+        </div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addUser()"><i class="fa fa-plus"></i>
+                Ajouter Utilisateur</button></div>
+    </div>
+    <div class="mt-4 mb-5">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> Nom </th>
+                    <th scope="col">Prénom </th>
+                    <th scope="col"> Date de naissance</th>
+                    <th scope="col"> Email</th>
+                    <th scope="col" style="width: 4cm;"> Fonction</th>
+                    
+
+
+
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of utilisateurs">
+                    <td scope="row">{{user.id_pers}}</td>
+                    <td>{{user.nom_pers| titlecase }}</td>
+                    <td>{{user.prenom_pers| titlecase }}</td>
+                    <td>{{user.date_naiss|date:'dd/MM/yyyy'}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{roles[user.id_pers]}}</td>
+                    
+                    
+
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col btn btn-outline-primary tooltips btn-sm " (click)="editCompte(user)"data-toggle="tooltip"
+                                data-original-title="Edit"> <b>Compte</b>
+                            </a>
+                            <a class="col btn btn-outline-success tooltips btn-sm " (click)="editUser(user)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <!--
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedUser(user)" data-toggle="tooltip"
+                                data-original-title="Delete"><i class="fas fa-times fa-1x"></i></a>-->
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  edit user------------------ -->
+    <div class="modal fade" id="editUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Utilisateur </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editUser')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+
+
+
+                        <div class="form-group mt-2">
+                            <label for="nom_pers"><b>Nom :</b> </label>
+
+                            <input type="text" formControlName="nom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nom_pers'].errors }">
+                            <div *ngIf="submitted && editF['nom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="prenom_pers"><b>prenom : </b></label>
+
+                            <input type="text" formControlName="prenom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['prenom_pers'].errors }">
+                            <div *ngIf="submitted && editF['prenom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['prenom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label for="email"><b>email:</b> </label>
+
+                            <input type="email" formControlName="email" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['email'].errors }"
+                                placeholder="email@gmail.com" />
+                            <div *ngIf="submitted && editF['email'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['email'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['email'].errors?.['email']">Veuillez saisir une adresse mail valide
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+                        <div class="form-group mt-2">
+                            <label for="date_naiss"><b>Date de naissance : </b></label>
+
+                            <input type="date" formControlName="date_naiss" class="form-control" id="date_naiss"
+                                name="date_naiss" [ngClass]="{'is-invalid':submitted && editF['date_naiss'].errors }">
+
+
+                            <div *ngIf="submitted && editF['date_naiss'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['date_naiss'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                       <div *ngIf="role==='ens'">
+                        <div class="form-group mt-4">
+                            <label for="idGrade">Grade : </label>
+
+                            <select formControlName="idGrade" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && editF['idGrade'].errors }">
+                                <option [ngValue]="null" disabled>....Choisir un grade...</option>
+                                <option *ngFor="let grade of grades" [ngValue]="grade.id_grade"> {{grade.nom_grade}}
+                                </option>
+
+                            </select>
+                            <div *ngIf="submitted && editF['idGrade'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['idGrade'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+                       </div>
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editUser')">Annuler</button>
+
+                            <button (click)="onEditUser()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+      <!--  edit compte------------------ -->
+      <div class="modal fade" id="editCompte">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Compte utilisateur  </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editCompte')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editCompteForm">
+
+
+
+                        <div class="form-group mt-2">
+                            <label for="login"><b>Login :</b> </label>
+
+                            <input type="text" formControlName="login" class="form-control"
+                                [ngClass]="{'is-invalid':submittedCompte && editCF['login'].errors }">
+                            <div *ngIf="submittedCompte && editCF['login'].errors" class="invalid-feedback">
+                                <div *ngIf="editCF['login'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        
+                        <div class="form-group mt-2">
+                            <label for="mdp"><b>Mot de passe :</b> </label>
+
+                            <input type="text" formControlName="mdp" class="form-control"
+                                [ngClass]="{'is-invalid':submittedCompte && editCF['mdp'].errors }">
+                            <div *ngIf="submittedCompte && editCF['mdp'].errors" class="invalid-feedback">
+                                <div *ngIf="editCF['mdp'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editCompte')">Annuler</button>
+
+                            <button (click)="onEditCompte()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+         <!--  Supprimer User-->
+         <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+         aria-hidden="true">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title" id="deleteModelLabel">Supprimer Utilisateur</h5>
+                     <button type="button" (click)="onDismiss('deleteUser')" class="close" data-dismiss="modal"
+                         aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                     </button>
+                 </div>
+                 <div class="modal-body">
+                     <p>Etes vous sure de vouloir supprimer l'utilisateur <b> {{deletePersonne?.prenom_pers}} {{deletePersonne?.nom_pers}} </b> ?</p>
+                     <div class="modal-footer">
+                         <button type="button" (click)="onDismiss('deleteUser')" class="btn btn-secondary"
+                             data-dismiss="modal">Annuler</button>
+                         <button (click)="onDeleteUser(deletePersonne?.id_pers)" class="btn btn-danger"
+                             data-dismiss="modal">Supprimer</button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     
+    <!--  Ajouter User -->
+    <div class="modal fade" id="addUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Utilisateur </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addUser')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddUser()" [formGroup]="addForm">
+
+                        <div class="form-group mt-4">
+                            <label for="role">Fonction : </label>
+
+                            <select formControlName="role" (ngModelChange)="onChangeRoleAdd()" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && addF['role'].errors }">
+                                <option [ngValue]="null" disabled>....Choisir une fonction...</option>
+                                <option value="ens"> Enseignant</option>
+                                <option value="ds"> Directeur des etudes et des stages </option>
+                                <option value="admin"> Administrateur </option>
+
+                            </select>
+                            <div *ngIf="submitted && addF['role'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['role'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_pers">Nom : </label>
+                            <input type="text" formControlName="nom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['nom_pers'].errors }">
+                            <div *ngIf="submitted && addF['nom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['nom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="prenom_pers">Prenom : </label>
+                            <input type="text" formControlName="prenom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['prenom_pers'].errors }">
+                            <div *ngIf="submitted && addF['prenom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['prenom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="email">Email : </label>
+                            <input type="email" formControlName="email" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['email'].errors }"placeholder="email@gmail.com">
+                            <div *ngIf="submitted && addF['email'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['email'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="addF['email'].errors?.['email']">Veuillez saisir une adresse mail valide</div>
+
+
+                            </div>
+
+                        </div>
+                
+                        <div class="form-group mt-4">
+
+                            <label for="email">Date de naissance : </label>
+                            <input type="date" formControlName="date_naiss" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['date_naiss'].errors }">
+                            <div *ngIf="submitted && addF['date_naiss'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['date_naiss'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div *ngIf="selectRole==='ens'">
+                         
+                            <div class="form-group mt-4">
+                                <label for="idGrade">Grade : </label>
+    
+                                <select formControlName="idGrade" class="form-control form-select form-select-m mb-3"
+                                    [ngClass]="{'is-invalid':submitted && addF['idGrade'].errors }">
+                                    <option [ngValue]="null" disabled>....Choisir un grade...</option>
+                                    <option *ngFor="let grade of grades" [ngValue]="grade"> {{grade.nom_grade}}
+                                    </option>
+    
+                                </select>
+                                <div *ngIf="submitted && addF['idGrade'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['idGrade'].errors?.['required']">Ce champs est obligatoire</div>
+    
+    
+                                </div>
+    
+    
+    
+                            </div>
+
+                        </div>
+                     
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addUser')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

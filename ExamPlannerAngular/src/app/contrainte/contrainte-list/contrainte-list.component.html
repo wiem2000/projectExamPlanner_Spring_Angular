@@ -1,0 +1,212 @@
+<h2> Liste des Contraintes </h2>
+<hr>
+
+<div class="row">
+    <div class="col "></div>
+    <div class="col"></div>
+    <div class="col-md-3"> <button class="btn btn-secondary mb-5 text-white fw-bold " (click)="addContrainte()"><i
+                class="fa fa-plus"></i>
+            Ajouter Contrainte</button></div>
+</div>
+<div class="mt-4 mb-5">
+
+    <table class="table table-hover" id="datatableexample">
+        <thead>
+            <tr>
+                <th scope="col"># </th>
+                <th scope="col"> Matiere 1 </th>
+                <th scope="col"> Matiere 2 </th>
+                <th scope="col"> Niveau </th>
+
+                <th scope="col"> Actions </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let contrainte of contraintes">
+                <td scope="row">{{contrainte.id_contrainte}}</td>
+                <td>{{contrainte.matieres[0].nom_mat}}</td>
+                <td>{{contrainte.matieres[1].nom_mat}}</td>
+                <td>{{contrainte.matieres[0].idModule.idNiveau.nom_niv}}</td>
+
+
+
+
+                <td>
+
+
+                    <a class=" col btn btn-danger tooltips " (click)="deletedContrainte(contrainte)"
+                        data-toggle="tooltip" data-original-title="Delete"><i class="fas fa-times fa-1x"></i></a>
+
+                </td>
+
+
+
+            </tr>
+
+
+
+        </tbody>
+    </table>
+</div>
+
+<!--  Ajouter Contrainte -->
+<div class="modal fade" id="addContrainte">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title align-center">Ajouter Contrainte </h4>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="onDismiss('addContrainte')">&times;</button>
+            </div>
+            <div class="container mt-4">
+
+                <form (ngSubmit)="onAddContrainte()" [formGroup]="addForm">
+
+                    <div class="form-group mt-4">
+                        <label for="idMatiere">Niveau : </label>
+
+                        <select (ngModelChange)="onChangeNiveau($event)" formControlName="niveau" class="form-control form-select form-select-m mb-3"
+                            id="niveau" [ngClass]="{'is-invalid':submitted && addF['niveau'].errors }">
+
+                            <option *ngFor="let niveau of niveaux" [ngValue]="niveau"
+                                [disabled]="niveau.etat_niv==false"> {{niveau.nom_niv}} </option>
+                                
+
+                        </select>
+                        <div *ngIf="submitted && addF['niveau'].errors" class="invalid-feedback">
+                            <div *ngIf="addF['niveau'].errors?.['required']">ce champs est obligatoire</div>
+
+                        </div>
+
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <div class="form-group ">
+                                <label for="idModule1"> Module: </label>
+        
+                                <select (ngModelChange)="onChangeModule1($event)" formControlName="module1" class="form-control form-select form-select-m mb-3"
+                                     [ngClass]="{'is-invalid':submitted && addF['module1'].errors }">
+        
+                                    <option *ngFor="let module of modules" [ngValue]="module"
+                                        [disabled]="module.etat_mod==false"> {{module.nom_mod}} </option>
+                                        
+        
+                                </select>
+                                <div *ngIf="submitted && addF['module1'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['module1'].errors?.['required']">ce champs est obligatoire</div>
+        
+                                </div>
+        
+                            </div>
+
+
+                        </div>
+                        <div class="col">
+
+                            <div class="form-group">
+                                <label for="idMatiere">Matiere 1 : </label>
+
+                                <select formControlName="matiere1" class="form-control form-select form-select-m mb-3"
+                                    [ngClass]="{'is-invalid':submitted && addF['matiere1'].errors }">
+
+                                    <option *ngFor="let matiere of matieresModule1" [ngValue]="matiere"
+                                        [disabled]="matiere.etat_mat==false"> {{matiere.nom_mat}} </option>
+
+                                </select>
+                                <div *ngIf="submitted && addF['matiere1'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['matiere1'].errors?.['required']">ce champs est obligatoire</div>
+
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <div class="form-group ">
+                                <label for="idModule2"> Module: </label>
+        
+                                <select (ngModelChange)="onChangeModule2($event)" formControlName="module2" class="form-control form-select form-select-m mb-3"
+                                     [ngClass]="{'is-invalid':submitted && addF['module2'].errors }">
+        
+                                    <option *ngFor="let module of modules" [ngValue]="module" 
+                                        [disabled]="module.etat_mod==false"> {{module.nom_mod}} </option>
+                                        
+        
+                                </select>
+                                <div *ngIf="submitted && addF['module2'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['module2'].errors?.['required']">ce champs est obligatoire</div>
+        
+                                </div>
+        
+                            </div>
+
+
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="idMatiere">Matiere 2 : </label>
+
+                                <select formControlName="matiere2" class="form-control form-select form-select-m mb-3"
+                                    [ngClass]="{'is-invalid':submitted && addF['matiere2'].errors }">
+
+                                    <option *ngFor="let matiere of matieresModule2" [ngValue]="matiere"
+                                        [disabled]="matiere.etat_mat==false"> {{matiere.nom_mat}} </option>
+
+                                </select>
+                                <div *ngIf="submitted && addF['matiere2'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['matiere2'].errors?.['required']">ce champs est obligatoire</div>
+                                    <div *ngIf="addF['matiere2'].errors?.['mustNotMatch']"> Vous avez choisit la meme
+                                        matiere
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer mt-4">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="onDismiss('addContrainte')">Annuler</button>
+
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  Supprimer Contrainte -->
+<div class="modal fade" id="deleteContrainte" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModelLabel">Supprimer Contrainte</h5>
+                <button type="button" (click)="onDismiss('deleteContrainte')" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Etes vous sure de vouloir supprimer la contrainte <b> {{deleteContrainte?.id_contrainte}} </b> ?</p>
+                <div class="modal-footer">
+                    <button type="button" (click)="onDismiss('deleteContrainte')" class="btn btn-secondary"
+                        data-dismiss="modal">Annuler</button>
+                    <button (click)="onDeleteContrainte(deleteContrainte?.id_contrainte)" class="btn btn-danger"
+                        data-dismiss="modal">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

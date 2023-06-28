@@ -1,0 +1,140 @@
+<h2> Mes voeux </h2>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6 "></div>
+        <div class="col"><button class="btn btn-outline-success mb-5 " style="height: 1.5cm;" (click)="getPlanif()"><i class="fa-solid fa-calendar-days"></i> Consulter planifications</button></div>
+        <div class="col"><button class="btn btn-outline-secondary mb-5 " style="height: 1.5cm;" (click)="getConv()"><i class="fa-solid fa-file"></i> Obtenir ma convocation</button></div>
+        <div class="col"> <button class="buttonPink mb-5 " style="height: 1.5cm;" (click)="addVoeux()"><i class="fa fa-plus"></i><b>Ajouter Voeux</b> </button></div>
+    </div>
+    <div class="row mt-5">
+        
+        <div class="col-md-3"> <b>Filtrer par planification :</b> </div>
+        <div class="col-md-4">
+            <form [formGroup]="selectForm">
+                <div class="form-group ">
+
+
+                    <select class="form-select form-select mb-3 form-control"
+                        (ngModelChange)="onChangePlanif($event)" formControlName="select" id="select">
+                        <option [ngValue]="null" disabled>Choisir une planification ...</option>
+                        <option value="tous">------ Liste total des voeux------</option>
+                        <option *ngFor="let planif of planifications" [hidden]="planif?.valide==false" [ngValue]="planif"> Session {{ planif?.type_session}} {{ planif?.date_debut|date:'MMMM yyyy' }} Semestre {{planif?.semestre}}</option>
+
+
+                    </select>
+
+
+                </div>
+            </form>
+
+
+        </div>
+        
+        
+    </div>
+
+    <div class="mt-4 mb-5">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> code planification </th>
+                    <th scope="col"> examen </th>
+                    <th scope="col"> date </th>
+                    <th scope="col"> seance </th>
+                    <th scope="col"> mumero salle </th>
+                    
+                   
+
+                 
+
+                </tr>
+            </thead>
+            <tbody>
+               
+                
+                <tr *ngFor="let v of voeux">
+                    <td scope="row">{{v.id_voeux}}</td>
+                     <td>Session {{ v.idExamenSalle?.idExamen?.idPlanification?.type_session }} {{ v.idExamenSalle?.idExamen?.idPlanification?.date_debut|date:'MMMM yyyy' }}  Semestre {{v.idExamenSalle?.idExamen?.idPlanification?.semestre}} </td>
+                     <td>{{v.idExamenSalle?.idExamen?.nom_exam}}</td>
+                     <td>{{v.idExamenSalle?.idExamen?.date_exam| date:'dd/MM/yyyy'}}</td>
+                      <td>{{v.idExamenSalle?.idExamen?.idSeance?.heure_debut}}=>{{v.idExamenSalle?.idExamen?.idSeance?.heure_fin}}</td>
+                   
+                    <td *ngIf="v.idExamenSalle?.idSalle?.type_salle=='Laboratoire'"> Labo {{v.idExamenSalle?.idSalle?.num_salle}}</td>
+                    <td *ngIf="v.idExamenSalle?.idSalle?.type_salle!='Laboratoire'">  {{v.idExamenSalle?.idSalle?.num_salle}}</td>
+                    
+         
+
+
+                 
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    
+
+
+  <!--  Ajouter Voeux de surveillance -->
+  <div class="modal fade" id="addVoeux">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 *ngIf="btn=='v'" class="modal-title align-center">Ajouter Voeux </h4>
+                <h4 *ngIf="btn=='c'" class="modal-title align-center">Obtenir convocation </h4>
+                <h4 *ngIf="btn=='p'" class="modal-title align-center">Consulter planification </h4>
+                
+                
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="onDismiss('addVoeux')">&times;</button>
+            </div>
+
+            <div class="container">
+                <form  [formGroup]="addForm">
+                  
+                     
+                            <div class="form-group mt-4">
+                                <label for="planif">Choisir une planification : </label>
+
+                                <select class="form-select form-select-m mb-3 form-control"
+                                    formControlName="planif"
+                                    [ngClass]="{'is-invalid':submitted && addF['planif'].errors }">
+                                    <option [ngValue]="null" disabled>Choisir une planification...</option>
+                                    <option *ngFor="let planif of planifications" [hidden]="planif?.valide==false" [ngValue]="planif" >
+                                        Session {{ planif?.type_session}} {{ planif?.date_debut|date:'MMMM yyyy' }} Semestre {{planif?.semestre}}
+
+                                </select>
+                                <div *ngIf="submitted && addF['planif'].errors" class="invalid-feedback">
+                                    <div *ngIf="addF['planif'].errors?.['required']">Ce champs est obligatoire
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                       
+                   
+
+
+                    <div class="modal-footer mt-5">
+                       
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="onDismiss('addVoeux')">Annuler</button>
+
+                        <button type="button"  class="btn btn-primary" (click)="onChoisir()">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

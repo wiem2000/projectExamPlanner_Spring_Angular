@@ -1,0 +1,210 @@
+<div class="mt-4 container md">
+
+    <h3> Modifier mon compte :</h3>
+    <hr>
+
+    <div class="card  ">
+        <div class="row">
+            <div class="col-md-4">
+              
+               
+              <img class=" container mt-5  " *ngIf="imageUrl==null" src="{{userImageUrl }}"   height="350" width="300"  alt="Card image cap">
+              <img class=" container mt-5  " *ngIf="imageUrl"   [src]="imageUrl" height="350" width="300"  alt="Card image cap">
+               
+
+            </div>
+            <div class="col">
+                <div class="card-body ">
+
+                    <form [formGroup]="editForm">
+
+                    
+
+                        <div class="form-group mt-2">
+                            <label for="nom_pers"><b>Nom :</b> </label>
+
+                            <input type="text" formControlName="nom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nom_pers'].errors }">
+                            <div *ngIf="submitted && editF['nom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="prenom_pers"><b>Prenom : </b></label>
+
+                            <input type="text" formControlName="prenom_pers" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['prenom_pers'].errors }">
+                            <div *ngIf="submitted && editF['prenom_pers'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['prenom_pers'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="login"><b>Login : </b></label>
+
+                            <input type="text" formControlName="login" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['login'].errors }">
+                            <div *ngIf="submitted && editF['login'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['login'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="email"><b>Email:</b> </label>
+
+                            <input type="email" formControlName="email" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['email'].errors }"
+                                placeholder="email@gmail.com" />
+                            <div *ngIf="submitted && editF['email'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['email'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['email'].errors?.['email']">Veuillez saisir une adresse mail valide
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+                        <div class="form-group mt-2">
+                            <label for="date_naiss"><b>Date de naissance : </b></label>
+
+                            <input type="date" formControlName="date_naiss" class="form-control" id="date_naiss"
+                                name="date_naiss" [ngClass]="{'is-invalid':submitted && editF['date_naiss'].errors }">
+
+
+                            <div *ngIf="submitted && editF['date_naiss'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['date_naiss'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        
+                        <div class="form-group mt-2">
+                            <label for="prenom_pers"><b>Photo:   </b></label>
+<!--
+                           
+
+-->
+                             <input type="file" accept="image/*" (change)="onSelectFile($event)" >
+
+
+                        </div>
+
+
+
+                        <div class="row mt-5">
+                            <hr>
+                            <div class="col-4"></div>
+                            <div class="col">
+                                <button class="btn btn-outline-danger">Annuler</button>
+                                <button (click)="editMdp()" class="btn btn-outline-secondary">Modifier Mot de
+                                    Passe</button>
+                                <button (click)="onUpdateCompte()" class="btn btn-outline-success">Modifier</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  modal mot de passe edit  -->
+<div class="modal fade" id="editMdp">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title align-center">Modifier Mot de passe </h4>
+                <button type="button" class="close" data-dismiss="modal" (click)="onDismiss('editMdp')">&times;</button>
+            </div>
+            <div class="container">
+                <form (ngSubmit)="onEditMdp()" [formGroup]="mdpForm">
+
+                    <div class="form-outline mb-4 mt-4">
+                        <div class="row">
+                            <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+                            <div class="col form-group">
+                                <input type="password" formControlName="mdpOld" class="form-control"
+                                    [ngClass]="{'is-invalid':submittedMdp  && mdpF['mdpOld'].errors }"
+                                    placeholder="Ancien Mot de passe " />
+
+                                <span *ngIf="mdpF['mdpOld'].getError('required')!=null" class="invalid-feedback"> ce
+                                    champs est obligatoire</span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4 mt-4">
+                        <div class="row">
+                            <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+                            <div class="col form-group">
+                                <input type="password" formControlName="mdp" class="form-control"
+                                    [ngClass]="{'is-invalid':submittedMdp  && mdpF['mdp'].errors }"
+                                    placeholder="Nouveau Mot de passe " />
+
+                                <span *ngIf="mdpF['mdp'].getError('required')!=null" class="invalid-feedback"> ce champs
+                                    est obligatoire</span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4 ">
+                        <div class="row">
+                            <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+                            <div class="col form-group">
+                                <input type="password" formControlName="mdpConfirm" class="form-control"
+                                    [ngClass]="{'is-invalid':submittedMdp && mdpF['mdpConfirm'].errors }"
+                                    placeholder="Confirmer le Mot de passe " />
+
+                                <span *ngIf="mdpF['mdpConfirm'].getError('required')!=null" class="invalid-feedback"> ce
+                                    champs est obligatoire</span>
+                                <span *ngIf="mdpF['mdpConfirm'].getError('mustMatch')!=null" class="invalid-feedback">
+                                    les champs ne correspondent pas</span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-outline-danger  mt-4"
+                            (click)="onDismiss('editMdp')">Annuler</button>
+                        <button type="submit" class="btn btn-outline-success mt-4">
+                            Modifier
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>

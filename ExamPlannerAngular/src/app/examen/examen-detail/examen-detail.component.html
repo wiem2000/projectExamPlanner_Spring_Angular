@@ -1,0 +1,128 @@
+<br>
+
+<div class="container mt-4 mb-5  ">
+
+    <h4>Détail Examen </h4>
+    <hr>
+
+
+    <form class="mt-4" #infoForm="ngForm">
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="nom_exam"><b> Nom examen :</b> </label>
+                    <input type="text" ngModel="{{exam?.nom_exam|titlecase}}" name="nom_exam" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="idMatiere"><b> Matiere :</b> </label>
+                    <input type="text" ngModel="{{exam?.idMatiere?.nom_mat|titlecase}}" name="idMatiere" class="form-control"
+                        disabled>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="type_exam"><b> Type examen :</b> </label>
+                    <input type="text"  ngModel="{{exam?.type_exam|titlecase}}" name="type_exam" class="form-control" disabled>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="row mt-2 mb-5">
+            <div class="col">
+                <div class="form-group">
+                    <label for="niveau"><b> Niveau: </b></label>
+                    <input type="text" ngModel="{{exam?.idMatiere?.idModule?.idNiveau?.nom_niv}}" name="niveau" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="semestre"><b> Semestre: </b></label>
+                    <input type="text" ngModel="{{exam?.idMatiere?.idModule?.semestre}}" name="semestre" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="nb_etud"><b> Nombre d'étudiant: </b></label>
+                    <input type="number" ngModel="{{exam?.nb_etud}}" name="nb_etud" class="form-control" disabled>
+                </div>
+            </div>
+       
+            <div class="col">
+                <div class="form-group">
+                    <label for="nb_heure"><b> Nombre d'heure:</b> </label>
+                    <input type="number" ngModel="{{exam?.nb_heure}}" name="nb_heure" class="form-control" disabled>
+                </div>
+            </div>
+
+
+        </div>
+
+        <h4> Horaire & planification </h4>
+        <hr>
+        <div class="row mt-4">
+            <div class="col">
+                <div class="form-group">
+                    <label for="date_exam"><b> Date prévue: </b></label>
+                    <input type="datetime" ngModel="{{exam?.date_exam|date:'dd/MM/yyyy'}}" name="date_exam"
+                        class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="seance"><b> Séance prévue :</b> </label>
+                    <input type="text" ngModel="{{exam?.idSeance?.heure_debut}} => {{exam?.idSeance?.heure_fin}}"
+                        name="seance" class="form-control" disabled>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+    <div class="mt-5 mb-5">
+        
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    
+                    <th scope="col" style="width: 5cm;"> Type salle </th>
+                    <th scope="col" style="width: 5cm;"> Numero salle  </th>
+                    <th scope="col" style="width: 5cm;"> Nb Etudiant </th>
+                    <th scope="col" style="width: 5cm;"> Enseignants </th>
+                  
+                 
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let examSalle of  examensSalles">
+                    
+                    <td>{{examSalle.idSalle.type_salle| titlecase}}</td>
+                    <td>{{examSalle.idSalle.num_salle}}</td>
+                    <td>{{examSalle.nbEtudiant}}</td>
+                    <td>
+                        <div *ngFor="let v of voeuxService.getVoeuxByExamSalle(totalVoeux,examSalle)">
+                            {{v.idEnseignant.nom_pers}}  {{v.idEnseignant.prenom_pers}}
+
+                        </div>
+
+                    </td>
+                    
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>

@@ -1,0 +1,74 @@
+<div class="container mt-5 mb-5">
+
+    <div style="text-align: center;">
+        <h2 class="mt-5"> Choix des voeux pour la surveillance des examens</h2>
+        <h3> ( Session {{ planif?.type_session }} {{ planif?.date_debut|date:'MMMM yyyy' }} Semestre
+            {{planif?.semestre}} )</h3>
+        <br>
+        <h5> A l’attention de Mme/Melle/M. : <b>{{user?.prenom_pers|titlecase}} {{user?.nom_pers|titlecase}}</b> </h5>
+        <br> Vous êtes priés de selectionner les séances qui vous conviendront dans le tableau ci dessous :
+
+    </div>
+    <hr>
+
+
+
+    <div *ngIf="planif?.date_debut_lancement_voeux==null || date_debut_acceptation_voeux>currentDate" class="alert alert-danger mt-5 mb-5" role="alert">
+        
+      Désolé ! L'acceptation des voeux n'est pas actuellement disponible . Veuillez réessayer ultérieurement. 
+    </div>
+
+    <div *ngIf="planif?.date_debut_lancement_voeux!=null && date_debut_acceptation_voeux<=currentDate">
+
+    <div style="color: red;">
+        <p>{{rest}}</p>
+    </div>
+    <div> due de surveillance: {{due}} séance(s) </div>
+    <table class="table table-bordered  mt-5 text-center " id="table1">
+        <tr style="background-color:#FFF0F5">
+            <th>######</th>
+            <th class="bordure" *ngFor="let x of dates"> {{x|date:"EEEE dd MMMM yyyy"|titlecase}} </th>
+        </tr>
+        <tr *ngFor="let s of seancesPlanif">
+
+
+            <th style="background-color:#F5F5F5">{{s.heure_debut + "=>" + s.heure_fin}}</th>
+
+
+            <td [id]="getCode(x,s)" ng-style="{ background-color: clicked ? 'red' : 'black'}" *ngFor="let x of dates"
+                [ngClass]="{'voeux': voeuxService.getVoeuxByDateSeancePlanif(voeuxEns,x,s,planif).length >0,
+                'indisponible':nbVoeuxDispo(x,s)==0, 'disponible':nbVoeuxDispo(x,s)!=0}" (click)="onDateSeance(x,s)">
+               
+            </td>
+
+
+        </tr>
+
+    </table>
+    <b>NB :* </b> La case choisite est colorée en rouge et indique une surveillance normale de 1,5 ou 2h dans une salle
+    ou dans un Labo .<br> Les
+    passages concernant les examens pratiques durent 1h 15mn y compris le temps d’enregistrement des travaux.
+    <br><b> ** </b> Les cases colorés en gris n'acceptent plus de surveillances
+    <div class="mt-5 mb-5" style="border: solid; text-align: center;font-size: large; padding:5px ;"> Aucun choix de
+        surveillance ne sera accepté apres le deadline fixé.<b> (Deadline: {{ planif?.date_fin_lancement_voeux|date:'dd
+            MMMM yyyy à HH:mm' }} )</b></div>
+
+
+
+    <hr>
+       <div class="row mb-5">
+        <div class="col-md-8"></div>
+        
+       
+        <div class="col">
+            <button class="btn btn-outline-danger btn-lg"  (click)="onAnnuler()">  Annuler </button>
+            <button class="btn btn-outline-success btn-lg"  (click)="onValider()">  Valider </button>
+
+        </div>
+    </div>
+
+</div>
+
+    <button class="col btn btn-outline-danger tooltips btn-m  " routerLink="/mesVoeux"><i
+        class="fa fa-angle-double-left" aria-hidden="true"></i> Retour </button>
+</div>

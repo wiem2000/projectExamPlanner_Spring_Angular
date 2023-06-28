@@ -1,0 +1,87 @@
+<!-- Intro settings -->
+<style>
+  /* Default height for small devices */
+  #intro-example {
+    height: 400px;
+  }
+
+  /* Height for devices larger than 992px */
+  @media (min-width: 992px) {
+    #intro-example {
+      height: 600px;
+    }
+  }
+</style>
+
+<!-- Navbar --nav class="navbar navbar-expand-lg  navbar-dark bg-dark" -->
+
+  <nav class="navbar navbar-expand-lg  navbar-dark ">
+  <div class="container-fluid">
+   
+
+    <a class="navbar-brand  " href="/">
+      <div class="logo-image">
+            <img src="../assets/images/logo5.png" class="img-fluid">
+      </div>
+</a> 
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="">Acceuil</a>
+        </li>
+        <li *ngIf="authenticationService.isUserLoggedIn()"  class="nav-item"> 
+          <a class="nav-link" routerLink="dashboard">Mon Dashboard</a>
+        </li>
+        <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false" (click)="getRoleUser()">Mes fonctionalités </a>
+
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_parcours"  >Gestion Des Parcours</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_niveau"  >Gestion Des Niveaux</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_module" >Gestion Des Modules</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item"routerLink="/list_matiere" >Gestion Des Matieres </a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_exam">Gestion Des Examens</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_utilisateur" >Gestion Des Utilisateurs</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_grade" >Gestion Des Grades</a></li>           
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_salle" >Gestion Des Salles</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_seance" >Gestion Des Seances</a></li>
+            <li *ngIf="role=='admin'"><a class="dropdown-item" routerLink="/list_voeux" >Gestion Des Voeux</a></li>
+            <li *ngIf="role=='ds'"><a class="dropdown-item" routerLink="/planifications">Gestion Des Planifications</a></li>
+            <li *ngIf="role=='ens'"><a class="dropdown-item" routerLink="/mesVoeux">Consulter Voeux De Surveillance</a></li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+      <div class="row" *ngIf="authenticationService.isUserLoggedIn()" >
+    
+        <div class="col dropdown" >
+          <div *ngIf="personnes" class="btn btn-secondary dropdown-toggle btn-login "   href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"> <i class="fa fa-user fa-lg cyan-text"></i> {{authenticationService.getUserLoggedIn(personnes)?.prenom_pers| titlecase}} {{authenticationService.getUserLoggedIn(personnes)?.nom_pers| titlecase}}</div>
+
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" (click)="onCompte(authenticationService.getUserLoggedIn(personnes))" >Mon compte</a></li>
+            <li><a class="dropdown-item" (click)="onLogout()" >Se deconnecter</a></li>
+
+          </ul>
+
+
+       
+        </div>
+      </div>
+      <div *ngIf="!authenticationService.isUserLoggedIn()">
+        <button type="button" class="btn btn-secondary" routerLink="">Se connecter</button>
+        <button type="button" class="btn btn-secondary" routerLink="/activerCompte">Activer Mon Compte</button>
+
+      </div>
+
+
+
+
+    </div>
+  </div>
+</nav>
+<!-- Navbar -->

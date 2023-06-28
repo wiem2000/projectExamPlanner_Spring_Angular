@@ -1,0 +1,62 @@
+
+<div class="card ">
+  <div class="card-header">
+    <h3>Login</h3>
+  </div>
+  <div class="card-body">
+
+
+<form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+  
+  <div class="form-outline mb-4">
+    <div class="row">
+      <div class="col-1"><i class="fas fa-user prefix grey-text fa-2xl"></i></div>
+      <div class="col form-group ">
+        <input type="text" formControlName="login" class="form-control" [ngClass]="{'is-invalid':submitted && loginF['login'].errors }" placeholder="Login" />
+        <div *ngIf="submitted && loginF['login'].errors" class="invalid-feedback">
+          <div *ngIf="loginF['login'].errors?.['required']">Login is required</div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- Password input -->
+  <div class="form-outline mb-4">
+    <div class="row">
+      <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+      <div class="col form-group">
+        <input type="password" formControlName="mdp" class="form-control" [ngClass]="{'is-invalid':submitted && loginF['mdp'].errors }" placeholder="Mot de passe " />
+        <div *ngIf="submitted && loginF['mdp'].errors" class="invalid-feedback">
+          <div *ngIf="loginF['mdp'].errors?.['required']">password is required</div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 column grid layout for inline styling -->
+  <div class="row mb-4">
+
+    <div class="col">
+      <!-- Simple link -->
+      <a routerLink="/activerCompte">Mon compte n'est pas activé ?</a>
+    </div>
+    <div class="col">
+
+      <a routerLink="/mdpOublie">Mot de passe oublié ?</a>
+    </div>
+  </div>
+
+  <!-- Submit button -->
+  <button type="submit" class="text-white">
+    <h5>Se connecter</h5>
+  </button>
+</form>
+</div>
+</div>

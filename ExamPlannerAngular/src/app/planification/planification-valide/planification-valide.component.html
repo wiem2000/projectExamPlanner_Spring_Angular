@@ -1,0 +1,273 @@
+<div class="container">
+
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+   
+   
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link"  (click)="scrollToElement(tableau)"> Affichage tableau</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"  (click)="scrollToElement(salle)">Afecattion des salles par examens</a>
+        </li>
+      
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false" (click)="scrollToElement(niveau)">
+            Affichage par niveau
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" >
+         
+          <li *ngFor="let n of niveaux"> <a class="dropdown-item"  >{{n?.nom_niv}}</a></li>
+            
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+      <div class="scroll-container">
+
+    <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div style="color: red;" class="col-md-3"> <b>Capacité limite :</b> {{capacite}} etudiants </div>
+
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div style="color: red;" class="col-md-3"> <b> * : </b> examen d'une heure </div>
+
+    </div>
+    <div id="titre">
+        <h1 #tableau class="mt-5" style="text-align: center;"> Calendrier Des examens du <span *ngIf="planif?.semestre==1">1
+                er</span><span *ngIf="planif?.semestre==2">2 ème</span> Semestre <br> Session {{ planif?.type_session }}
+            {{
+            planif?.date_debut|date:'MMMM yyyy' }}</h1>
+    </div>
+
+    <table class="table table-bordered mb-5 mt-5 text-center  canvas_div_pdf" id="table1">
+        <tr style="background-color:#FFF0F5">
+            <th>######</th>
+            <th class="bordure" *ngFor="let x of dates" [colSpan]="planif?.nb_seance_jour"> {{x|date:"EEEE dd MMMM
+                yyyy"|titlecase}} </th>
+        </tr>
+        <tr style="background-color:#F5F5F5">
+            <th>######</th>
+            <ng-container *ngFor="let x of dates">
+                <th *ngFor="let s of seancesPlanif" [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance}">
+                    {{s.heure_debut + "=>" + s.heure_fin}}</th>
+            </ng-container>
+        </tr>
+        <tr style="background-color:#F5F5F5">
+            <th>Nb etudiant /seance</th>
+            <ng-container *ngFor="let x of dates">
+                <th *ngFor="let s of seancesPlanif" [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance}">
+                    {{examenService.getNbEtudiantByJourSeance(examens,x,s)}}</th>
+            </ng-container>
+        </tr>
+        <ng-container *ngFor="let p of parcours">
+
+            <tr *ngFor="let n of niveauService.getNiveauByParcours1(p,niveaux) "
+                [ngClass]="{bordure_top:n.id_niv==niveauService.getNiveauByParcours1(p,niveaux)[0].id_niv}">
+
+                <th style="background-color:#FFF0F5">{{n.nom_niv}}</th>
+                <ng-container *ngFor="let d of dates">
+                    <td *ngFor="let s of seancesPlanif"
+                        [ngClass]="{bordure:s.num_seance==seancesPlanif[0].num_seance,dimanche:d.getDay()==0 ,examen:examenService.getExamenByJourSeance(examens, n, d, s)!=null,pratique: examenService.getExamenByJourSeance(examens, n, d, s)?.type_exam=='Pratique' }">
+                        <div *ngIf="examenService.getExamenByJourSeance(examens, n, d, s)!=null"
+                            (click)="onDetailExam(examenService.getExamenByJourSeance(examens, n, d, s))">
+                            {{examenService.getExamenByJourSeance(examens, n, d, s).nom_exam}}
+                            <span *ngIf="examenService.getExamenByJourSeance(examens, n, d, s).nb_heure==1">
+                                <b> * </b>
+                            </span>
+
+                        </div>
+
+
+                    </td>
+                </ng-container>
+
+            </tr>
+
+        </ng-container>
+
+
+
+
+
+
+
+    </table>
+    <div class="row">
+        <div class="col-md-10"></div>
+        <button class=" col btn btn-outline-success tooltips btn-m" (click)="downloadPDF1()"> <i
+                class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i> <b> Exporter PDF </b> </button>
+    </div>
+
+    <hr class="mt-5">
+    <h2 #salle class="mt-5"> Affectation Des Salles </h2>
+    <hr class="mt-5">
+
+
+
+    <table class="table table-bordered mb-5 mt-5 " id="table2">
+
+        <tr style="background-color:#F5F5F5 " class="text-center">
+            <th>Niveau</th>
+            <th>Examen</th>
+            <th>Date</th>
+            <th>Seance</th>
+            <th>Salle</th>
+
+        </tr>
+        <ng-container *ngFor="let p of parcours">
+            <ng-container *ngFor="let n of niveauService.getNiveauByParcours1(p,niveaux) ">
+                <tr class="bordure_top">
+
+                    <th *ngIf="examenService.getExamenByNiveau(examens,n).length!=0"
+                        [rowSpan]="examenService.getExamenByNiveau(examens,n).length" style="background-color:#FFF0F5"
+                        class="text-center">{{ n.nom_niv}}</th>
+                    <th *ngIf="examenService.getExamenByNiveau(examens,n).length==0" style="background-color:#FFF0F5"
+                        class="text-center">{{ n.nom_niv}}</th>
+
+                    <td *ngIf="examenService.getExamenByNiveau(examens,n)[0]" style="font-weight: bold;" class="examen"
+                        (click)="onDetailExam(examenService.getExamenByNiveau(examens,n)[0])">
+                        {{ examenService.getExamenByNiveau(examens,n)[0]?.nom_exam}}</td>
+                    <td> {{ examenService.getExamenByNiveau(examens,n)[0]?.date_exam|date:'dd/MM/yyyy'}} </td>
+                    <td> {{ examenService.getExamenByNiveau(examens,n)[0]?.idSeance?.heure_debut}} => {{
+                        examenService.getExamenByNiveau(examens,n)[0]?.idSeance?.heure_fin}} </td>
+                    <td>
+
+                        <div *ngIf="examensSalles" class="ligne">
+                            <span
+                                *ngFor="let examSalle of examen_salleService.getAllExamenSallesByExamen(examensSalles,examenService.getExamenByNiveau(examens,n)[0])">
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()==='laboratoire'.toLowerCase()">
+                                    Labo {{examSalle.idSalle.num_salle}} ,</span>
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()!='laboratoire'.toLowerCase()">
+                                    {{examSalle.idSalle.num_salle}} ,</span>
+
+                            </span>
+                        </div>
+                    </td>
+
+
+                </tr>
+
+                <tr *ngFor="let e of examenService.getExamenByNiveau(examens,n).slice(1)">
+                    <td *ngIf="e" style="font-weight: bold;" class="examen" (click)="onDetailExam(e)">{{e.nom_exam}}
+                    </td>
+                    <td> {{ e?.date_exam|date:'dd/MM/yyyy'}} </td>
+                    <td> {{ e?.idSeance?.heure_debut}} => {{ e?.idSeance?.heure_fin}} </td>
+                    <td>
+                        <span *ngIf="examensSalles" class="ligne">
+                            <span
+                                *ngFor="let examSalle of examen_salleService.getAllExamenSallesByExamen(examensSalles,e)">
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()==='laboratoire'.toLowerCase()">
+                                    Labo {{examSalle.idSalle.num_salle}} ,</span>
+                                <span *ngIf="examSalle.idSalle.type_salle.toLowerCase()!='laboratoire'.toLowerCase()">
+                                    {{examSalle.idSalle.num_salle}} ,</span>
+                            </span>
+                        </span>
+                    </td>
+
+                </tr>
+
+
+            </ng-container>
+        </ng-container>
+
+
+
+
+    </table>
+
+    <div class="row">
+        <div class="col-md-10"></div>
+        <button class=" col btn btn-outline-success tooltips btn-m" (click)="downloadPDF2()"> <i
+                class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i> <b> Exporter PDF </b> </button>
+    </div>
+
+    <hr class="mt-5">
+    <h2 #niveau class="mt-5"> Affichage Par Niveau </h2>
+    <hr class="mt-5">
+
+    <div *ngFor="let p of parcours">
+
+        <h3 style="text-decoration: solid;text-decoration: underline;">Parcours : {{p.nom_par}}</h3>
+        <div *ngFor="let n of niveauService.getNiveauByParcours1(p,niveaux) ">
+
+            <div class="mt-2 mb-2" [id]="getCode(n)">
+                <div class="niveau mt-4">
+                    <h4  >Niveau : {{n.nom_niv}}</h4>
+                </div>
+
+                <table class="table table-bordered  mt-5 mb-2 text-center ">
+                    <tr style="background-color:#FFF0F5">
+                        <th>######</th>
+                        <th *ngFor="let s of seancesPlanif" style="background-color:#F5F5F5">{{s.heure_debut + "=>" +
+                            s.heure_fin}}
+                        </th>
+                    </tr>
+                    <tr *ngFor="let x of dates">
+                        <th style="background-color:#FFF0F5"> {{x|date:"EEEE dd MMMM yyyy"|titlecase}} </th>
+
+
+
+
+                        <td class="affichageNiveau" *ngFor="let s of seancesPlanif"
+                            [ngClass]="{dimanche:x.getDay()==0 ,examen:examenService.getExamenByJourSeance(examens, n, x, s)!=null,pratique: examenService.getExamenByJourSeance(examens, n, x, s)?.type_exam=='Pratique' }">
+                            <div *ngIf="examenService.getExamenByJourSeance(examens, n, x, s)!=null"
+                                (click)="onDetailExam(examenService.getExamenByJourSeance(examens, n, x, s))">
+                                {{examenService.getExamenByJourSeance(examens, n, x, s).nom_exam}}
+                                <span *ngIf="examenService.getExamenByJourSeance(examens, n, x, s).nb_heure==1">
+                                    <b> * </b>
+                                </span>
+                            </div>
+                        </td>
+
+
+                    </tr>
+
+                </table>
+                <div style="border:solid ; padding: 0.2cm;">
+                    <b>NB:</b><br>
+                    <ul>
+                        <li> Chaque étudiant doit présenter sa carte d’étudiant et sa CIN.<br></li>
+                        <li> Chaque étudiant est tenu de vérifier sur les tableaux d’affichage son affectation dans les
+                            salles d’examens, chaque jour, chaque séance.</li>
+                        <li> Toute absence est assimilée à une note équivalente à zéro quel que soit le motif.</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+    <div class="row ">
+        <div class="col-md-10"></div>
+        <button class=" col btn btn-outline-success tooltips btn-m" (click)="downloadPDF4()"> <i
+                class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i> <b> Exporter PDF </b> </button>
+    </div>
+
+
+
+
+
+
+    <hr>
+
+
+
+
+</div>
+
+
+</div>

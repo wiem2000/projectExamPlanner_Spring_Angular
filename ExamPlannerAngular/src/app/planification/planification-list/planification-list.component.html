@@ -1,0 +1,356 @@
+<div class="mt-4 container md">
+
+    <h3> Liste des planifications:</h3>
+    <hr>
+    <div class="row">
+        <div class="col "></div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5 " (click)="addPlanification()"><i
+                    class="fa fa-plus"></i> Ajouter Planification</button></div>
+    </div>
+    <div class="row">
+        
+        <div class="col-md-2"> <b>Filter par:</b> </div>
+        <div class="col">
+            <form [formGroup]="selectForm">
+                <div class="row">
+
+                <div class="form-group col ">
+
+                    <label for="select">Type de Session : </label>
+                    <select class="form-select form-select-m mb-3 form-control"
+                         formControlName="select" id="select">
+                        <option [ngValue]="null" disabled>Choisir un type de session ...</option>
+                        <option value="tous">Tous</option>
+                        <option value="Principale"> Principale </option>
+                        <option value="Controle"> Controle </option>
+
+
+                    </select>
+
+
+                </div>
+                <div class="form-group col ">
+
+                    <label for="selectSemestre">Semestre : </label>
+                    <select  class="form-select form-select-m mb-3 form-control"
+                         formControlName="selectSemestre" id="selectSemestre">
+                        <option [ngValue]="null" disabled>Choisir un semestre ...</option>
+                        <option value="tous">Tous</option>
+                        <option value=1> Semestre 1 </option>
+                        <option value=2> Semestre 2 </option>
+
+
+                    </select>
+
+
+                </div>
+                <div class="form-group col ">
+
+                    <label for="selectYear"> Mois & Année : </label>
+                 <input type="month"   formControlName="selectYear" class="form-control" id="selectYear"
+                 name="selectYear">
+
+
+                </div>
+                <div class="form-group col-md-2 ">
+
+                    <br>
+                 <button class="buttonPink" (click)="onFiltrer()" style="width: 3cm;"> Filtrer</button>
+
+
+                </div>
+            </div>
+            
+            </form>
+
+
+        </div>
+        
+      
+    </div>  
+
+    <div class="mt-4" *ngIf="planifications">
+
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">##### </th>
+                    <th scope="col">Session </th>
+                    <th scope="col">Année</th>
+                    <th scope="col">Semestre</th>
+                    <th scope="col">Statut </th>
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!-- (click)="onPlanifDetail(planif)"-->
+                <tr   *ngFor="let planif of planifications" >
+                    <td scope="row">{{planif.id_planif}}</td>
+                    <td scope="row">{{planif.type_session}}</td>
+                    <td>{{planif.date_debut|date:'MMMM yyyy'}}</td>
+                    <td>{{planif.semestre}}</td>
+                    <td> 
+                        <div *ngIf="planif.valide==true"> <button style="width: 3cm;" class="btn btn-success"> validée </button> </div>
+                        <div *ngIf="planif.valide==false"> <button style="width:3cm;" class="btn btn-danger">Non validée</button></div>
+                    </td>
+                    <td>
+                        
+                        <a class=" col buttonPink tooltips btn-m " (click)="onPlanifDetail(planif)"
+                            data-toggle="tooltip" data-original-title="Detail"><i class="fa fa-eye"></i> </a>
+                        <a class=" col btn btn-outline-success tooltips btn-m " (click)="updatePlanification(planif)"
+                            data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a class=" col btn btn-outline-danger tooltips btn-m" (click)="deletedPlanification(planif)"
+                            data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                         
+                    </td>
+
+
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <!--  Ajouter Planification -->
+    <div class="modal fade" id="addPlanification">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Planification </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addPlanification')">&times;</button>
+                </div>
+
+                <form id="addForm" (ngSubmit)="onAddPlanification()" [formGroup]="addForm">
+
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="type_session">Type Session : </label>
+
+                            <select formControlName="type_session" class="form-control form-select form-select-m mb-3"
+                                id="type_session" name="type_session"
+                                [ngClass]="{'is-invalid':submitted && addF['type_session'].errors }">
+                                <option value="Principale"> Principale </option>
+                                <option value="Controle"> Controle </option>
+                            </select>
+                            <div *ngIf="submitted && addF['type_session'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['type_session'].errors?.['required']">Name is required</div>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="date_debut">Date Debut : </label>
+
+                            <input type="date" formControlName="date_debut" class="form-control" id="date_debut"
+                                name="date_debut" [ngClass]="{'is-invalid':submitted && addF['date_debut'].errors }">
+
+                            <div *ngIf="submitted && addF['date_debut'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['date_debut'].errors?.['required']">Name is required</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_fin">Date Fin : </label>
+
+                            <input type="date" formControlName="date_fin" class="form-control" id="date_fin"
+                                name="date_fin" [ngClass]="{'is-invalid':submitted && addF['date_fin'].errors }">
+
+                            <div *ngIf="submitted && addF['date_fin'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['date_fin'].errors?.['required']">Name is required</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nb_seance_jour">Nb seance/jour : </label>
+
+                            <input type="number" formControlName="nb_seance_jour" class="form-control"
+                                id="nb_seance_jour" name="nb_seance_jour"
+                                [ngClass]="{'is-invalid':submitted && addF['nb_seance_jour'].errors }">
+
+                            <div *ngIf="submitted && addF['nb_seance_jour'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['nb_seance_jour'].errors?.['required']">Name is required</div>
+                                <div *ngIf="addF['nb_seance_jour'].errors?.['pattern']">valeurs permises: [1/2/3/4]</div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="semestre">Semestre : </label>
+
+                            <input type="number" formControlName="semestre" class="form-control" id="semestre"
+                                name="semestre" [ngClass]="{'is-invalid':submitted && addF['semestre'].errors }">
+
+                            <div *ngIf="submitted && addF['semestre'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['semestre'].errors?.['required']">Name is required</div>
+                                <div *ngIf="addF['semestre'].errors?.['pattern']">valeurs permises: [1/2]</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="onDismiss('addPlanification')">Annuler</button>
+
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--  Modifier Planification -->
+    <div class="modal fade" id="updatePlanification">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Planification </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('updatePlanification')">&times;</button>
+                </div>
+
+                <form [formGroup]="editForm">
+                    <div class="container">
+
+                        <div class="form-group">
+                            <label for="type_session">Type Session : </label>
+
+                            <select formControlName="type_session" class="form-control form-select form-select-m mb-3"
+                                id="type_session" name="type_session"
+                                [ngClass]="{'is-invalid':submitted && editF['type_session'].errors }">
+                                <option value="Principale"> Principale </option>
+                                <option value="Controle"> Controle </option>
+                            </select>
+                            <div *ngIf="submitted && editF['type_session'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['type_session'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="date_debut">Date Debut : </label>
+
+                            <input type="date" formControlName="date_debut" class="form-control" id="date_debut"
+                                name="date_debut" [ngClass]="{'is-invalid':submitted && editF['date_debut'].errors }">
+
+
+                            <div *ngIf="submitted && editF['date_debut'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['date_debut'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_fin">Date Fin : </label>
+
+                            <input type="date" formControlName="date_fin" class="form-control" id="date_fin"
+                                name="date_fin" [ngClass]="{'is-invalid':submitted && editF['date_fin'].errors }">
+
+                            <div *ngIf="submitted && editF['date_fin'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['date_fin'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nb_seance_jour">Nb seance/jour : </label>
+
+                            <input type="number" formControlName="nb_seance_jour" class="form-control"
+                                id="nb_seance_jour" name="nb_seance_jour"
+                                [ngClass]="{'is-invalid':submitted && editF['nb_seance_jour'].errors }">
+
+                            <div *ngIf="submitted && editF['nb_seance_jour'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nb_seance_jour'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['nb_seance_jour'].errors?.['pattern']">valeurs permises: [1/2/3/4]</div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="semestre">Semestre : </label>
+
+                            <input type="number" formControlName="semestre" class="form-control" id="semestre"
+                                name="semestre" [ngClass]="{'is-invalid':submitted && editF['semestre'].errors }">
+
+                            <div *ngIf="submitted && editF['semestre'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['semestre'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['semestre'].errors?.['pattern']">valeurs permises: [1/2]</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="onDismiss('updatePlanification')">Annuler</button>
+
+                        <button (click)="onUpdatePlanification()" class="btn btn-primary">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--  Supprimer Planification -->
+    <div class="modal fade" id="deletePlanification" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Planification</h5>
+                    <button type="button" (click)="onDismiss('deletePlanification')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer la planification de la Session <b>
+                            {{deletePlanification?.type_session}} {{deletePlanification?.date_debut|date:'MMMM yyyy'}}
+                            Semestre {{deletePlanification?.semestre}}</b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deletePlanification')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeletePlanification(deletePlanification?.id_planif)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</div>

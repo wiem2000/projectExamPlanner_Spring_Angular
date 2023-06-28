@@ -1,0 +1,61 @@
+<div class="card ">
+  <div class="card-header">
+    <h3> Recuperation Compte </h3>
+  </div>
+  <div class="card-body">
+
+
+    Veuillez saisir votre nouveau mot de passe :
+
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="mdpForm">
+
+      <!-- Password input -->
+      <div class="form-outline mb-4 mt-4">
+        <div class="row">
+          <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+          <div class="col form-group">
+            <input type="password" formControlName="mdp" class="form-control"
+              [ngClass]="{'is-invalid':submitted && mdpF['mdp'].errors }" placeholder="Nouveau Mot de passe " />
+            <!--
+        <div *ngIf="submitted && mdpF['mdp'].errors" class="invalid-feedback">
+          <div *ngIf="mdpF['mdp'].errors?.['required']">ce champs est obligatoire</div>
+
+        </div>
+        -->
+        <span *ngIf="mdpF['mdp'].getError('required')!=null" class="invalid-feedback" > ce champs est obligatoire</span>
+
+
+
+
+          </div>
+        </div>
+      </div>
+      <!-- Password input -->
+      <div class="form-outline mb-4 ">
+        <div class="row">
+          <div class="col-1"><i class="fa-solid fa-lock fa-2xl"></i></div>
+          <div class="col form-group">
+            <input type="password" formControlName="mdpConfirm" class="form-control"
+              [ngClass]="{'is-invalid':submitted && mdpF['mdpConfirm'].errors }"
+              placeholder="Confirmer le Mot de passe " />
+            <!--
+            <div *ngIf="submitted && mdpF['mdpConfirm'].errors" class="invalid-feedback">
+              <div *ngIf="mdpF['mdpConfirm'].errors?.['required']">Ce champs est obligatoire</div>
+              
+            </div>
+           -->
+           <span *ngIf="mdpF['mdpConfirm'].getError('required')!=null" class="invalid-feedback" > ce champs est obligatoire</span>
+           <span *ngIf="mdpF['mdpConfirm'].getError('mustMatch')!=null" class="invalid-feedback" > les champs ne correspondent pas</span>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-info text-white mt-4">
+        <h5>envoyer</h5>
+      </button>
+    </form>
+  </div>
+</div>

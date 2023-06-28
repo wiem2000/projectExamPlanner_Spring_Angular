@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+.buttonPink{
+    background-color: transparent;
+    border-radius: 3px;
+    border:1px solid #f30a7b;
+  margin-right: 4px;
+    color:  #f30a7b;
+    padding: 7px ;
+   
+    font-size: 15px;
+    
+    cursor: pointer;
+  }
+  
+  .buttonPink:hover {
+    background-color: #f30a7b;
+    color: white;
+   
+  }
+
+  .buttonPink:active {
+    background-color: #f30a7b;
+    color: white;
+    border-color: #f2acba ;
+  }
+  .buttonPink:focus{
+    background-color:transparent;
+    color:  #f30a7b;
+    border-color: #f2acba ;
+    box-shadow: 0 0 0 3px #f2acba;
+  }

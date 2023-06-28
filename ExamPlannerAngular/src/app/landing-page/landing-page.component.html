@@ -1,0 +1,53 @@
+<!-- Background image -->
+<div id="intro-example" class="p-5 text-center bg-image"
+  style="background-image: url('https://acurschool.com/images/acurschool-logiciel-gestion-scolaire-tunisie1.jpg');">
+  <div class="mask" style="background-color: rgba(26, 2, 50, 0.136);">
+    
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="text-white">
+          <h1 class="mb-3 mt-3">{{titre | titlecase}} </h1>
+
+
+          <hr>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row mt-5 ">
+          <div class="col mt-3 text-start text-white ">
+
+            <div class="logo-image ">
+              <img src="../assets/images/logo5.png" class="img-fluid rotate">
+            </div>
+            <div class="fs-2 mt-2 fw-bold text-center">
+              {{date | date: "EEEE dd MMMM yyyy" | titlecase}}<br>
+              {{date | date: "HH:mm:ss"}}
+            </div>
+
+
+
+          </div>
+          <div class="col mb-5">
+
+            <router-outlet></router-outlet>
+
+
+
+          </div>
+        </div>
+      </div>
+  
+  
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<!-- Background image -->

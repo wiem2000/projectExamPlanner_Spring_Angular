@@ -1,0 +1,217 @@
+<div class="container mt-4">
+    <h2> Liste des seances </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherSeances(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Seance..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addSeance()"><i
+                    class="fa fa-plus"></i>
+                Ajouter Seance</button></div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">Numero seance</th>
+                    <th scope="col">    Heure debut </th>
+                    <th scope="col"> Heure fin </th>
+                   
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let seance of seances">
+                    <td scope="row">{{seance.num_seance}}</td>
+                    <td>{{seance.heure_debut}}</td>
+                    <td>{{seance.heure_fin}}</td>
+
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col btn btn-outline-success tooltips btn-sm " (click)="editSeance(seance)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedSeance(seance)"
+                                data-toggle="tooltip" data-original-title="Delete"><i
+                                    class="fas fa-times fa-1x"></i></a>
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  Ajouter Seance -->
+    <div class="modal fade" id="addSeance">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Seance </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addSeance')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddSeance()" [formGroup]="addForm">
+        
+
+
+                    
+
+                      
+               
+                        <div class="form-group mt-4">
+
+                            <label for="heure_debut">Heure debut : </label>
+                            <input type="time" formControlName="heure_debut" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['heure_debut'].errors }">
+                            <div *ngIf="submitted && addF['heure_debut'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['heure_debut'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="heure_fin">Heure fin: </label>
+                            <input type="time" formControlName="heure_fin" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['heure_fin'].errors }">
+                            <div *ngIf="submitted && addF['heure_fin'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['heure_fin'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                    
+
+                    
+
+
+
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addSeance')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  edit Seance -->
+    <div class="modal fade" id="editSeance">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Seance </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editSeance')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+                        
+
+                        <div class="form-group mt-4">
+
+                            <label for="heure_debut">Heure debut : </label>
+                            <input type="time" formControlName="heure_debut" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['heure_debut'].errors }">
+                            <div *ngIf="submitted && editF['heure_debut'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['heure_debut'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="heure_fin">Heure fin : </label>
+                            <input type="time" formControlName="heure_fin" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['heure_fin'].errors }">
+                            <div *ngIf="submitted && editF['heure_fin'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['heure_fin'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+
+                 
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editSeance')">Annuler</button>
+
+                            <button (click)="onEditSeance()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--  Supprimer Seance -->
+    <div class="modal fade" id="deleteSeance" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Seance</h5>
+                    <button type="button" (click)="onDismiss('deleteSeance')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer le seance <b> {{deleteSeance?.num_seance}} : {{deleteSeance?.heure_debut}} => {{deleteSeance?.heure_fin}}</b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deleteSeance')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeleteSeance(deleteSeance?.num_seance)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

@@ -1,0 +1,364 @@
+<div class="container mt-4">
+    <h2> Liste des modules </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherModules(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Module..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addModule()"><i
+                    class="fa fa-plus"></i>
+                Ajouter Module</button></div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> Nom </th>
+                    <th scope="col"> Semestre </th>
+                    <th scope="col"> Niveau </th>
+
+                    <th scope="col" style="width: 5cm;"> Activé </th>
+
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let module of modules">
+                    <td scope="row">{{module.id_mod}}</td>
+                    <td>{{module.nom_mod}}</td>
+                    <td>{{module.semestre}}</td>
+                    <td>{{module.idNiveau?.nom_niv}}</td>
+
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" [checked]="module.etat_mod==true" type="checkbox"
+                                id="flexSwitchCheckChecked{{module.id_mod}}" (click)="checkEtat(module)">
+
+
+                        </div>
+
+
+
+                    </td>
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col-md-4 btn btn-outline-success tooltips btn-sm " (click)="editModule(module)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <!--
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedModule(module)"
+                                data-toggle="tooltip" data-original-title="Delete"><i
+                                    class="fas fa-times fa-1x"></i></a>-->
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  Ajouter Module -->
+    <div class="modal fade" id="addModule">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Module </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addModule')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddModule()" [formGroup]="addForm">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group mt-4">
+                                    <label for="idParcours">Parcours : </label>
+
+                                    <select class="form-select form-select-m mb-3 form-control"
+                                        (ngModelChange)="onChangeParcours($event)" formControlName="idParcours"
+                                        [ngClass]="{'is-invalid':submitted && addF['idParcours'].errors }">
+                                        <option [ngValue]="null" disabled>Choisir un parcours...</option>
+                                        <option *ngFor="let p of parcours" [ngValue]="p.id_par" [disabled]="p.etat_par==false">
+                                            {{p.nom_par}} </option>
+
+                                    </select>
+                                    <div *ngIf="submitted && addF['idParcours'].errors" class="invalid-feedback">
+                                        <div *ngIf="addF['idParcours'].errors?.['required']">Ce champs est obligatoire
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group mt-4">
+                                    <label for="idNiveau">Niveau : </label>
+
+                                    <select class="form-select form-select-m mb-3 form-control"
+                                         formControlName="idNiveau"
+                                        [ngClass]="{'is-invalid':submitted && addF['idNiveau'].errors }">
+                                        <option [ngValue]="null" disabled>Choisir un niveau...</option>
+                                        <option *ngFor="let n of niveaux" [ngValue]="n" [disabled]="n.etat_niv==false">
+                                            {{n.nom_niv}} </option>
+
+                                    </select>
+                                    <div *ngIf="submitted && addF['idNiveau'].errors" class="invalid-feedback">
+                                        <div *ngIf="addF['idNiveau'].errors?.['required']">Ce champs est obligatoire
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_mod">Nom Module : </label>
+                            <input type="text" formControlName="nom_mod" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['nom_mod'].errors }">
+                            <div *ngIf="submitted && addF['nom_mod'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['nom_mod'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="semestre">Semestre : </label>
+                            <input type="number" min="1" max="2" formControlName="semestre" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['semestre'].errors }">
+                            <div *ngIf="submitted && addF['semestre'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['semestre'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="addF['semestre'].errors?.['pattern']">valeurs permises: [1/2]</div>
+                                
+
+
+                            </div>
+
+                        </div>
+
+                    
+
+                        <div class="form-group mt-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="etat_mod">Etat : </label>
+                                </div>
+
+
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_modActive" value="option1" checked>
+                                        <label class="form-check-label" for="inlineRadio1">Activé</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_modDesactive" value="option2">
+                                        <label class="form-check-label" for="inlineRadio2">Désactivé</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addModule')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  edit Module -->
+    <div class="modal fade" id="editModule">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Module </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editModule')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group mt-4">
+                                    <label for="idParcours">Parcours : </label>
+
+                                    <select  class="form-select form-select-m mb-3 form-control"
+                                         formControlName="idParcours" 
+                                        [ngClass]="{'is-invalid':submitted && editF['idParcours'].errors }"(ngModelChange)="onChangeParcours($event)">
+                                        <option [ngValue]="null" disabled>Choisir un parcours...</option>
+                                        <option *ngFor="let p of parcours" [ngValue]="p.id_par" [disabled]="p.etat_par==false">
+                                            {{p.nom_par}} </option>
+
+                                    </select>
+                                    <div *ngIf="submitted && editF['idParcours'].errors" class="invalid-feedback">
+                                        <div *ngIf="editF['idParcours'].errors?.['required']">Ce champs est obligatoire
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group mt-4">
+                                    <label for="idNiveau">Niveau : </label>
+
+                                    <select class="form-select form-select-m mb-3 form-control" 
+                                         formControlName="idNiveau" 
+                                        [ngClass]="{'is-invalid':submitted && editF['idNiveau'].errors }">
+                                        <option [ngValue]="null" disabled>Choisir un niveau...</option>
+                                        <option *ngFor="let n of niveaux" [ngValue]="n.id_niv" [disabled]="n.etat_niv==false">
+                                            {{n.nom_niv}} </option>
+
+                                    </select>
+                                    <div *ngIf="submitted && editF['idNiveau'].errors" class="invalid-feedback">
+                                        <div *ngIf="editF['idNiveau'].errors?.['required']">Ce champs est obligatoire
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_mod">Nom Module : </label>
+                            <input type="text" formControlName="nom_mod" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nom_mod'].errors }">
+                            <div *ngIf="submitted && editF['nom_mod'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nom_mod'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <label for="semestre">Semestre : </label>
+                            <input type="number" min="1" max="2" formControlName="semestre" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['semestre'].errors }">
+                            <div *ngIf="submitted && editF['semestre'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['semestre'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['semestre'].errors?.['pattern']">valeurs permises: [1/2]</div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group mt-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="etat_mod">Etat : </label>
+                                </div>
+
+
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_modActiveEdit" value="option1"
+                                            [checked]="updateModule?.etat_mod==true">
+                                        <label class="form-check-label" for="inlineRadio1">Activé</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_modDesactiveEdit" value="option2"
+                                            [checked]="updateModule?.etat_mod==false">
+                                        <label class="form-check-label" for="inlineRadio2">Désactivé</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editModule')">Annuler</button>
+
+                            <button (click)="onEditModule()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--  Supprimer Module -->
+    <div class="modal fade" id="deleteModule" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Module</h5>
+                    <button type="button" (click)="onDismiss('deleteModule')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer le module <b> {{deleteModule?.nom_mod}} </b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deleteModule')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeleteModule(deleteModule?.id_mod)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

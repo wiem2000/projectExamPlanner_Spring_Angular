@@ -1,0 +1,27 @@
+.logo-image{
+    width: 200px;
+    height:200px;
+   margin-left: 30%;
+   margin-right: 50%;
+    
+    
+    
+    
+}
+.rotate {
+    animation: rotation 30s infinite linear;
+  }
+  
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+ 
+  .carte{
+   
+    margin-right: 2cm;
+  }

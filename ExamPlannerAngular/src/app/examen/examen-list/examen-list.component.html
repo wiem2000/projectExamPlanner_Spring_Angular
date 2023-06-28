@@ -1,0 +1,339 @@
+<div class="container mt-4">
+    <h2> Liste des examens </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col "></div>
+        
+        <div class="col">
+            <form [formGroup]="selectForm">
+                <div class="form-group ">
+
+
+                    <select class="form-select form-select-lg mb-3 form-control"
+                        (ngModelChange)="onChangePlanif($event)" formControlName="select" id="select">
+                        <option [ngValue]="null" disabled>Choisir une planification ...</option>
+                        <option value="tous">------ Liste total des examens------</option>
+                        <option *ngFor="let planif of planifications"  [ngValue]="planif"> Session {{ planif?.type_session}} {{ planif?.date_debut|date:'MMMM yyyy' }} Semestre {{planif?.semestre}}</option>
+
+
+                    </select>
+
+
+                </div>
+            </form>
+
+
+        </div>
+        <div class="col ">
+
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1"> <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div></div>
+                    <div class="col"><input type="search "style="height:45px;" (ngModelChange)="chercherExamens(key.value)" #key="ngModel"
+                            ngModel name="key" id="search" class="form-control mr-sm-2" placeholder="Chercher Examen..."
+                            required></div>
+
+                </div>
+            </form>
+
+
+        </div>
+    </div>  
+    <!--
+    <div class="row mt-5">
+        <div class="col "></div>
+        <div class="col "></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5 " (click)="addExamen()"><i
+                    class="fa fa-plus "></i>
+                Ajouter Examen</button></div>
+    </div>
+    -->
+    <div class="mt-4">
+        <div class="alert alert-danger" role="alert" id="examen0" style="display:none">
+            Aucun examen n'a été programmé pour l'instant !
+        </div>
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 5cm;">#</th>
+                    <th scope="col" style="width: 13cm;"> Nom </th>
+                    <th scope="col" style="width: 5cm;"> Type </th>
+                    <th scope="col" style="width: 5cm;"> Nb Heure </th>
+                    <th scope="col" style="width: 5cm;"> Nb etudiant </th>
+                    <th scope="col" style="width: 5cm;"> Date </th>
+                    <th scope="col" style="width: 5cm;"> Seance </th>
+                    <th scope="col" style="width: 13cm;"> Matiere </th>
+                    <th scope="col" style="width: 3cm;"> Niveau </th>
+                    <th scope="col" style="width: 3cm;"> Code planification </th>
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let examen of examens">
+                    <td scope="row">{{examen.id_exam}}</td>
+                    <td>{{examen.nom_exam}}</td>
+                    <td>{{examen.type_exam}}</td>
+                    <td>{{examen.nb_heure}}</td>
+                    <td>{{examen.nb_etud}}</td>
+                    <td>{{examen.date_exam|date:'dd/MM/yyyy'}}</td>
+                    <td>{{examen.idSeance?.heure_debut}}</td>
+                    <td>{{examen.idMatiere?.nom_mat}} </td>
+                    <td>{{examen.idMatiere?.idModule?.idNiveau?.nom_niv}} </td>
+                    <td>{{examen.idPlanification?.id_planif}} </td>
+
+                    <td>
+                        <div class="row">
+                            <a class="col btn btn-outline-success tooltips btn-sm " (click)="editExamen(examen)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <!--
+                            <a class="  col btn btn-outline-danger tooltips btn-sm" (click)="deletedExamen(examen)"
+                                data-toggle="tooltip" data-original-title="Delete"><i
+                                    class="fas fa-times fa-1x"></i></a>-->
+
+                        
+                                </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  Ajouter Examen 
+    <div class="modal fade" id="addExamen">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Examen </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addExamen')">&times;</button>
+                </div>
+                <div class="container">
+
+                    <form (ngSubmit)="onAddExamen()" [formGroup]="addForm">
+                        <div class="form-group mt-4">
+                            <label for="idMatiere">Matiere : </label>
+
+                            <select formControlName="idMatiere" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && f['idMatiere'].errors }">
+
+                                <option *ngFor="let matiere of matieres" [ngValue]="matiere"> {{matiere.nom_mat}}
+                                </option>
+
+                            </select>
+                            <div *ngIf="submitted && f['idMatiere'].errors" class="invalid-feedback">
+                                <div *ngIf="f['idMatiere'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label for="nom_exam">Nom : </label>
+                            <input type="text" formControlName="nom_exam" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && f['nom_exam'].errors }">
+                            <div *ngIf="submitted && f['nom_exam'].errors" class="invalid-feedback">
+                                <div *ngIf="f['nom_exam'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label for="type_exam">Type : </label>
+
+                            <select formControlName="type_exam" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && f['type_exam'].errors }">
+                                <option value="Théorique"> Théorique </option>
+                                <option value="Pratique"> Pratique </option>
+                            </select>
+
+                            <div *ngIf="submitted && f['type_exam'].errors" class="invalid-feedback">
+                                <div *ngIf="f['type_exam'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group mt-4">
+                            <label for="nb_heure">Nb heure : </label>
+
+                            <input type="number" formControlName="nb_heure" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && f['nb_heure'].errors }">
+
+
+                            <div *ngIf="submitted && f['nb_heure'].errors" class="invalid-feedback">
+                                <div *ngIf="f['nb_heure'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="nb_etud">Nb Etudiant : </label>
+
+                            <input type="number" formControlName="nb_etud" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && f['nb_etud'].errors }">
+
+
+                            <div *ngIf="submitted && f['nb_etud'].errors" class="invalid-feedback">
+                                <div *ngIf="f['nb_etud'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addExamen')">Close</button>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+-->
+   
+<!--  Supprimer Examen -->
+    <div class="modal fade" id="deleteExamen" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Examen</h5>
+                    <button type="button" (click)="onDismiss('deleteExamen')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer l'examen <b> {{deleteExamen?.nom_exam}} </b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deleteExamen')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeleteExamen(deleteExamen?.id_exam)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  edit Examen -->
+    <div class="modal fade" id="editExamen">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Examen </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editExamen')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+                        <div class="form-group mt-4">
+                            <label for="nom_exam">Nom : </label>
+                            <input type="text" formControlName="nom_exam" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nom_exam'].errors }">
+                            <div *ngIf="submitted && editF['nom_exam'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nom_exam'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label for="type_exam">Type : </label>
+
+                            <select formControlName="type_exam" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && editF['type_exam'].errors }">
+                                <option value="théorique"> Théorique </option>
+                                <option value="Pratique"> Pratique </option>
+                            </select>
+
+                            <div *ngIf="submitted && editF['type_exam'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['type_exam'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="nb_heure">Nb heure : </label>
+
+                            <input type="number" min="1" max="1.5" formControlName="nb_heure" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nb_heure'].errors }">
+
+
+                            <div *ngIf="submitted && editF['nb_heure'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nb_heure'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['nb_heure'].errors?.['min']">Nombre doit etre compris entre 1 et 1.5</div>
+                                <div *ngIf="editF['nb_heure'].errors?.['max']">Nombre doit etre compris entre 1 et 1.5</div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="nb_etud">Nb etudiant : </label>
+
+                            <input type="number" formControlName="nb_etud" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nb_etud'].errors }">
+
+
+                            <div *ngIf="submitted && editF['nb_etud'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nb_etud'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['nb_etud'].errors?.['pattern']">Nombre entier uniquement</div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editExamen')">Annuler</button>
+
+                            <button (click)="onEditExamen()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
+   
+
+
+
+</div>

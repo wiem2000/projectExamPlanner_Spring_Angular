@@ -1,0 +1,218 @@
+<!-- Background image -->
+<div id="intro-example" class="p-5 text-center bg-image"
+  style="background-image: url('https://acurschool.com/images/acurschool-logiciel-gestion-scolaire-tunisie1.jpg');">
+  <div class="mask" style="background-color: rgba(26, 2, 50, 0.136);">
+  
+    <div *ngIf="authenticationService.isUserLoggedIn()==true">
+      <div *ngIf="role=='admin'">
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="text-white">
+            <h1 class="mb-3 mt-3 " style="border: solid;padding: 1cm;">Espace Administrateur </h1>
+
+            <div *ngIf="personnes" class="mt-5 mb-5">
+              <h1 class="mb-3 mt-3">Bienvenue {{authenticationService.getUserLoggedIn(personnes)?.prenom_pers|
+                titlecase}}
+              </h1>
+              <p>Vous trouverez ci dessous toutes les fonctionalités qui vous sont permises. Bon travail!</p>
+              <hr>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-2 mb-3 carte ">
+
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" routerLink="/list_parcours" style="height:5cm; " src="../assets/images/parcours.jpg" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Parcours</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_parcours">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte ">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" routerLink="/list_niveau" style="height:5cm; " src="../assets/images/niveau.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Niveaux</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_niveau">Consulter</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" routerLink="/list_module" style="height:5cm; " src="../assets/images/module.jpg" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Modules</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_module">Consulter</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_matiere" src="../assets/images/matiere.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Matieres</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_matiere">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_salle" src="../assets/images/salle.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Salles</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_salle">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_seance" src="../assets/images/seance.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Seances</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_seance">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_exam" src="../assets/images/examen.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Examens</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_exam">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_utilisateur" src="../assets/images/utilisateurs.png"
+                  alt="Card image cap">
+                <div class="card-body mt-3" style=" padding: 0cm;">
+                  <h5 class="card-title">Gestion Des Utilisateurs</h5>
+
+                  <button class="buttonPink mt-3 mb-3" routerLink="/list_utilisateur">Consulter</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3 carte">
+              <div class="card " style="width: 15rem;">
+                <img class="card-img-top" style="height:5cm; " routerLink="/list_grade" src="../assets/images/grade.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Grades</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/list_grade">Consulter</button>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+      <div *ngIf="role=='ds'">
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="text-white">
+            <h1 class="mb-3 mt-3 " style="border: solid;padding: 1cm;">Espace Directeur des etudes et des stages </h1>
+
+            <div *ngIf="personnes" class="mt-5 mb-5">
+              <h1 class="mb-3 mt-3">Bienvenue {{authenticationService.getUserLoggedIn(personnes)?.prenom_pers|
+                titlecase}}
+              </h1>
+              <p>Vous trouverez ci dessous toutes les fonctionalités qui vous sont permises. Bon travail!</p>
+              <hr>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-4 mb-3 carte ">
+
+              <div class="card " style="width: 18rem;">
+                <img class="card-img-top" routerLink="/planifications" style="height:5cm; " src="../assets/images/planification.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Gestion Des Planifications</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/planifications">Consulter</button>
+                </div>
+              </div>
+            </div>
+            
+
+            
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+      <div *ngIf="role=='ens'">
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="text-white">
+            <h1 class="mb-3 mt-3 " style="border: solid;padding: 1cm;">Espace Enseignant </h1>
+
+            <div *ngIf="personnes" class="mt-5 mb-5">
+              <h1 class="mb-3 mt-3">Bienvenue {{authenticationService.getUserLoggedIn(personnes)?.prenom_pers|
+                titlecase}}
+              </h1>
+              <p>Vous trouverez ci dessous toutes les fonctionalités qui vous sont permises. Bon travail!</p>
+              <hr>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-4 mb-3 carte ">
+
+              <div class="card " style="width: 18rem;">
+                <img class="card-img-top" routerLink="/mesVoeux" style="height:5cm; " src="../assets/images/voeux.png" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Mes voeux de surveillance</h5>
+
+                  <button class="buttonPink mt-3" routerLink="/mesVoeux">Consulter</button>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+
+        </div>
+      </div>
+    
+    
+    </div>
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<!-- Background image -->

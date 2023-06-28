@@ -1,0 +1,24 @@
+nav
+{background-color: #4CAF50;
+    
+ font-size: 18px;
+ height:70px;
+    
+}
+.btn-login{
+    padding: 12px ;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logo-image{
+    width: 70px;
+    height:70px;
+    margin-top: 1cm;
+    margin-bottom: 1cm;
+    
+    
+    
+}

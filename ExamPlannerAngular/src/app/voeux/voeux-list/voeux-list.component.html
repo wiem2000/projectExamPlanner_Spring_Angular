@@ -1,0 +1,74 @@
+<div class="container mt-4">
+    <h2> Liste des voeux </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                             #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Voeux..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> </div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> code planification </th>
+                    <th scope="col"> date </th>
+                    <th scope="col"> seance </th>
+                    <th scope="col"> enseignant </th>
+                    <th scope="col"> mumero salle </th>
+                    
+                   
+
+                 
+
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr *ngFor="let v of voeux">
+                    <td scope="row">{{v.id_voeux}}</td>
+                     <td>{{v.idExamenSalle?.idExamen?.idPlanification?.id_planif}}</td>
+                     <td>{{v.idExamenSalle?.idExamen?.date_exam| date:'dd/MM/yyyy'}}</td>
+                      <td>{{v.idExamenSalle?.idExamen?.idSeance?.heure_debut}}=>{{v.idExamenSalle?.idExamen?.idSeance?.heure_fin}}</td>
+                   
+                   
+                    <td>{{v.idEnseignant.nom_pers}} {{v.idEnseignant.prenom_pers}}</td>
+                   
+                    <td *ngIf="v.idExamenSalle?.idSalle?.type_salle=='Laboratoire'"> Labo {{v.idExamenSalle?.idSalle?.num_salle}}</td>
+                    <td *ngIf="v.idExamenSalle?.idSalle?.type_salle!='Laboratoire'">  {{v.idExamenSalle?.idSalle?.num_salle}}</td>
+                    
+         
+
+
+                 
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+</div>

@@ -1,0 +1,23 @@
+.text {
+    text-align: center;
+  }
+  
+  #progress {
+    margin: 20px auto;
+    width: 80%;
+    height: 40px;
+    position: relative;
+    background-color: #ddd;
+  }
+  
+  #bar {
+    background-color: #4caf50;
+    width: 10px;
+    height: 40px;
+    position: absolute;
+  }
+  
+  #loading {
+    font-size: 1.4rem;
+  }
+ 

@@ -1,0 +1,234 @@
+<div class="container mt-4">
+    <h2> Liste des salles </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherSalles(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Salle..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addSalle()"><i
+                    class="fa fa-plus"></i>
+                Ajouter Salle</button></div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">Numero salle</th>
+                    <th scope="col"> Type salle </th>
+                    <th scope="col"> Capacite </th>
+                   
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let salle of salles">
+                    <td scope="row">{{salle.num_salle}}</td>
+                    <td>{{salle.type_salle}}</td>
+                    <td>{{salle.capacite}}</td>
+
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col btn btn-outline-success tooltips btn-sm " (click)="editSalle(salle)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedSalle(salle)"
+                                data-toggle="tooltip" data-original-title="Delete"><i
+                                    class="fas fa-times fa-1x"></i></a>
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  Ajouter Salle -->
+    <div class="modal fade" id="addSalle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Salle </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addSalle')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddSalle()" [formGroup]="addForm">
+        
+
+
+                        <div class="form-group mt-4">
+                            <label for="type_exam">Type de la salle: </label>
+
+                            <select formControlName="type_salle" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && addF['type_salle'].errors }">
+                                <option value="normal"> Normal </option>
+                                <option value="Laboratoire"> Laboratoire </option>
+                            </select>
+
+                            <div *ngIf="submitted && addF['type_salle'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['type_salle'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                      
+               
+                        <div class="form-group mt-4">
+
+                            <label for="capacite">Capacite de la salle : </label>
+                            <input type="number" formControlName="capacite" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['capacite'].errors }">
+                            <div *ngIf="submitted && addF['capacite'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['capacite'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="addF['capacite'].errors?.['pattern']">Nombre entier uniquement</div>
+
+                            </div>
+
+                        </div>
+
+                    
+
+                    
+
+
+
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addSalle')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  edit Salle -->
+    <div class="modal fade" id="editSalle">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Salle </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editSalle')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+                        
+                        <div class="form-group mt-4">
+
+                            <label for="num_salle">Numero de la salle : </label>
+                            <input type="number" formControlName="num_salle" class="form-control" >
+                       
+
+                        </div>
+                        <div class="form-group mt-4">
+                            <label for="type_exam">Type de la salle: </label>
+
+                            <select formControlName="type_salle" class="form-control form-select form-select-m mb-3"
+                                [ngClass]="{'is-invalid':submitted && editF['type_salle'].errors }">
+                                <option value="normal"> Normal </option>
+                                <option value="Laboratoire"> Laboratoire </option>
+                            </select>
+
+                            <div *ngIf="submitted && editF['type_salle'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['type_salle'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                       
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="capacite">Capacite de la salle : </label>
+                            <input type="number" formControlName="capacite" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['capacite'].errors }">
+                            <div *ngIf="submitted && editF['capacite'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['capacite'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="editF['capacite'].errors?.['pattern']">Nombre entier uniquement</div>
+
+                            </div>
+
+                        </div>
+
+
+                 
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editSalle')">Annuler</button>
+
+                            <button (click)="onEditSalle()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--  Supprimer Salle -->
+    <div class="modal fade" id="deleteSalle" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Salle</h5>
+                    <button type="button" (click)="onDismiss('deleteSalle')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer le salle <b>  {{deleteSalle?.type_salle}} {{deleteSalle?.num_salle}} </b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deleteSalle')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeleteSalle(deleteSalle?.num_salle)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

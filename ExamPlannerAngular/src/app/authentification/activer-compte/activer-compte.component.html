@@ -1,0 +1,37 @@
+
+<div class="card ">
+    <div class="card-header">
+      <h3>Activation compte</h3>
+    </div>
+    <div class="card-body">
+        Nous avons pris en charge votre demande d'activation.<br>
+
+        Dès que vous saisissez votre adresse mail, vous receverez un mail de confirmation contenant votre code d'accés à la plateforme ainsi que des informations de connexion pour y accéder.
+  
+  
+  <form (ngSubmit)="onActiver()" [formGroup]="activerForm">
+  
+    <div class="form-outline mt-5">
+      <div class="row">
+        <div class="col-1"><i class="fa-solid fa-envelope prefix grey-text fa-2x"></i></div>
+        <div class="col form-group ">
+          <input type="email" formControlName="email" class="form-control" [ngClass]="{'is-invalid':submitted && activerF['email'].errors }" placeholder="email@gmail.com" />
+          <div *ngIf="submitted && activerF['email'].errors" class="invalid-feedback">
+            <div *ngIf="activerF['email'].errors?.['required']">Veuillez remplir ce champs</div>
+            <div *ngIf="activerF['email'].errors?.['email']">Veuillez saisir une adresse mail valide</div>
+  
+  
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-info text-white mt-4">
+      <h5>envoyer</h5>
+    </button>
+  </form>
+  </div>
+  </div>

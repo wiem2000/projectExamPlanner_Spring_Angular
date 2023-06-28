@@ -1,0 +1,196 @@
+<div class="container mt-4">
+    <h2> Liste des grades </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherGrade(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Grade..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addGrade()"><i class="fa fa-plus"></i>
+                Ajouter Grade</button></div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> Nom </th>
+                    <th scope="col"> charge de surveillance(/seance) </th>
+
+                    <th scope="col"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let grade of grades">
+                    <td scope="row">{{grade.id_grade}}</td>
+                    <td>{{grade.nom_grade|titlecase }}</td>
+                    <td>{{grade.charge_surv}}</td>
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col btn btn-outline-success tooltips btn-sm " (click)="editGrade(grade)"  data-toggle=" tooltip"
+                                data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedGrade(grade)" data-toggle=" tooltip"
+                                data-original-title="Delete"><i class="fas fa-times fa-1x"></i></a>
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+    <!--  Ajouter Grade -->
+    <div class="modal fade" id="addGrade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Grade </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addGrade')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddGrade()" [formGroup]="addForm">
+
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_grade">Nom Grade : </label>
+                            <input type="text" formControlName="nom_grade" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['nom_grade'].errors }">
+                            <div *ngIf="submitted && addF['nom_grade'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['nom_grade'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mt-4">
+
+                            <label for="charge_surv">Charge surveillance : </label>
+                            <input type="number" formControlName="charge_surv" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['charge_surv'].errors }">
+                            <div *ngIf="submitted && addF['charge_surv'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['charge_surv'].errors?.['required']">Ce champs est obligatoire</div>
+                                <div *ngIf="addF['charge_surv'].errors?.['pattern']">Nombre entier uniquement</div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addGrade')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  edit Grade -->
+    <div class="modal fade" id="editGrade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Grade </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editGrade')">&times;</button>
+                </div>
+
+<div class="container">
+                <form [formGroup]="editForm">
+                    
+                  
+                    <div class="form-group mt-4">
+
+                        <label for="nom_grade">Nom Grade : </label>
+                        <input type="text" formControlName="nom_grade" class="form-control"
+                            [ngClass]="{'is-invalid':submitted && editF['nom_grade'].errors }">
+                        <div *ngIf="submitted && editF['nom_grade'].errors" class="invalid-feedback">
+                            <div *ngIf="editF['nom_grade'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group mt-4">
+
+                        <label for="charge_surv">Charge surveillance (nombre de seance) : </label>
+                        <input type="number" formControlName="charge_surv" class="form-control"
+                            [ngClass]="{'is-invalid':submitted && editF['charge_surv'].errors }">
+                        <div *ngIf="submitted && editF['charge_surv'].errors" class="invalid-feedback">
+                            <div *ngIf="editF['charge_surv'].errors?.['required']">Ce champs est obligatoire</div>
+                            <div *ngIf="editF['charge_surv'].errors?.['pattern']">Nombre entier uniquement</div>
+
+                        </div>
+
+                    </div>
+              
+
+                    <div class="modal-footer mt-5">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="onDismiss('editGrade')">Annuler</button>
+
+                        <button (click)="onEditGrade()" class="btn btn-primary">Modifier</button>
+                    </div>
+                </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    
+     <!--  Supprimer Matiere -->
+     <div class="modal fade" id="deleteGrade" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+     aria-hidden="true">
+     <div class="modal-dialog" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="deleteModelLabel">Supprimer Grade</h5>
+                 <button type="button" (click)="onDismiss('deleteGrade')" class="close" data-dismiss="modal"
+                     aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+             <div class="modal-body">
+                 <p>Etes vous sure de vouloir supprimer le grade <b> {{deleteGrade?.nom_grade}} </b> ?</p>
+                 <div class="modal-footer">
+                     <button type="button" (click)="onDismiss('deleteGrade')" class="btn btn-secondary"
+                         data-dismiss="modal">Annuler</button>
+                     <button (click)="onDeleteGrade(deleteGrade?.id_grade)" class="btn btn-danger"
+                         data-dismiss="modal">Supprimer</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+</div>

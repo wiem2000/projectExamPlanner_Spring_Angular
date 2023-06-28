@@ -1,0 +1,285 @@
+<br>
+
+<div class="container mt-4 mb-5  ">
+    <div class="mb-5">
+        <div *ngIf="planif?.valide==true" class="alert alert-success" role="alert"><b>Cette planification est validée
+                !</b></div>
+        <div *ngIf="planif?.valide==false" class="alert alert-danger" role="alert"><b>Cette planification n'est pas
+                encore validée !</b></div>
+    </div>
+
+    <h4>Détail planification </h4>
+    <hr>
+
+
+    <form class="mt-4 mb-3" #infoForm="ngForm">
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="type_session"><b> Type Session:</b> </label>
+                    <input type="text" ngModel="{{planif?.type_session}}" name="type_session" class="form-control"
+                        disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="date_debut"><b> Date debut: </b></label>
+                    <input type="datetime" ngModel="{{planif?.date_debut|date:'dd/MM/yyyy'}}" name="date_debut"
+                        class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="date_fin"> <b>Date fin:</b> </label>
+                    <input type="datetime" ngModel="{{planif?.date_fin|date:'dd/MM/yyyy'}}" name="date_fin"
+                        class="form-control" disabled>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="semestre"><b> Semestre: </b></label>
+                    <input type="number" ngModel="{{planif?.semestre}}" name="semestre" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="nb_seance_jour"><b> Nombre seance/jour:</b> </label>
+                    <input type="number" ngModel="{{planif?.nb_seance_jour}}" name="nb_seance_jour" class="form-control"
+                        disabled>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </form>
+
+    <div class="row mt-5 " [hidden]="planif?.valide==true">
+        <div class="col-6"></div>
+        <div class="col">
+            <button class="col btn btn-outline-secondary tooltips btn-m  " (click)="onModifier()"><i
+                    class="fa fa-pencil"></i> <b> Modifier la planification </b></button>
+        </div>
+        <div class="col">
+            <button class="col buttonPink tooltips btn-m  " (click)="onParametrer()"><i class="fa fa-cogs"
+                    aria-hidden="true"></i> <b> Parametrer les contraintes </b></button>
+
+        </div>
+        <div class="col">
+
+            <button class="col btn btn-outline-success tooltips btn-m " [disabled]="clicked==true"
+                (click)="onPlanifier()"><i class="fa fa-calendar"></i> <b> Lancer Planification</b></button>
+
+        </div>
+    </div>
+    <div class="row mt-5 " [hidden]="planif?.valide==false">
+        <div class="col-7 " style="color: red;"><p>{{rest}}</p></div>
+        <div class="col">
+            <button class=" buttonPink tooltips btn-m " (click)="onModifierVoeux()"><i class="fa fa-calendar"></i> <b> fixer la
+                    periode d'acceptation des voeux</b></button>
+
+
+        </div>
+        <div class="col"> <button class="col btn btn-outline-success tooltips btn-m " (click)="onAffecterVoeux()"><i
+                    class="fa fa-users" aria-hidden="true"></i> <b> Affecter les voeux de surveillances </b></button>
+        </div>
+
+    </div>
+    <br>
+    <hr>
+
+    <br><br>
+
+
+
+    <div [hidden]="clicked==false || loaded==true ">
+        <div id="progress">
+            <div id="bar"></div>
+        </div>
+        <p class="text" id="loading"></p>
+    </div>
+
+
+    <div *ngIf="planif?.valide==true">
+        <app-planification-valide> </app-planification-valide>
+    </div>
+
+    <router-outlet>
+
+    </router-outlet>
+
+
+    <button class="col btn btn-outline-danger tooltips btn-m  " routerLink="/planifications"><i
+            class="fa fa-angle-double-left" aria-hidden="true"></i> Liste des planifications </button>
+
+
+
+
+</div>
+
+<!--  Modifier Planification -->
+<div class="modal fade" id="updatePlanification">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title align-center" >Modifier Planification </h4>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="onDismiss('updatePlanification')">&times;</button>
+            </div>
+
+            <form [formGroup]="editForm">
+                <div class="container">
+                
+                <div class="form-group">
+                    <label for="type_session">Type Session : </label>
+                 
+                        <select  formControlName="type_session" class="form-control form-select form-select-m mb-3" id="type_session" name="type_session"
+                        [ngClass]="{'is-invalid':submitted && editF['type_session'].errors }"
+                        >
+                            <option value="Principale"> Principale </option>
+                            <option value="Controle"> Controle </option>
+                        </select>
+                        <div *ngIf="submitted && editF['type_session'].errors" class="invalid-feedback">
+                            <div *ngIf="editF['type_session'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                        </div>
+
+                   
+
+                </div>
+               
+
+                <div class="form-group">
+                    <label for="date_debut">Date Debut : </label>
+
+                    <input type="date" formControlName="date_debut" class="form-control" id="date_debut" name="date_debut"
+                    [ngClass]="{'is-invalid':submitted && editF['date_debut'].errors }" >
+                    
+
+                    <div *ngIf="submitted && editF['date_debut'].errors" class="invalid-feedback">
+                        <div *ngIf="editF['date_debut'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                    </div>
+
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_fin">Date Fin : </label>
+
+                    <input type="date" formControlName="date_fin" class="form-control" id="date_fin" name="date_fin"
+                    [ngClass]="{'is-invalid':submitted && editF['date_fin'].errors }"  >
+                    
+                    <div *ngIf="submitted && editF['date_fin'].errors" class="invalid-feedback">
+                        <div *ngIf="editF['date_fin'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="nb_seance_jour">Nb seance/jour : </label>
+
+                    <input type="number"  formControlName="nb_seance_jour" class="form-control" id="nb_seance_jour" name="nb_seance_jour"
+                    [ngClass]="{'is-invalid':submitted && editF['nb_seance_jour'].errors }" >
+                    
+                    <div *ngIf="submitted && editF['nb_seance_jour'].errors" class="invalid-feedback">
+                        <div *ngIf="editF['nb_seance_jour'].errors?.['required']">Ce champs est obligatoire</div>
+                        <div *ngIf="editF['nb_seance_jour'].errors?.['pattern']">valeurs permises: [1/2/3/4]</div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="semestre">Semestre : </label>
+
+                    <input type="number" formControlName="semestre" class="form-control" id="semestre" name="semestre"
+                    [ngClass]="{'is-invalid':submitted && editF['semestre'].errors }" >
+                    
+                    <div *ngIf="submitted && editF['semestre'].errors" class="invalid-feedback">
+                        <div *ngIf="editF['semestre'].errors?.['required']">Ce champs est obligatoire</div>
+                        <div *ngIf="editF['semestre'].errors?.['pattern']">valeurs permises: [1/2]</div>
+
+                    </div>
+
+                </div>
+            </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        (click)="onDismiss('updatePlanification')">Annuler</button>
+
+                    <button  (click)="onUpdatePlanification()" class="btn btn-primary">Modifier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--  Modifier Voeux -->
+<div class="modal fade" id="updateVoeux">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title align-center" >Fixer Periode d'accepation des voeux </h4>
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="onDismiss('updateVoeux')">&times;</button>
+            </div>
+<div class="container">
+            <form [formGroup]="editVoeuxForm">
+                <div class="container mt-4 mb-4">
+
+
+                <div class="form-group mb-3">
+                    <label for="date_debut_lancement_voeux">Date Debut d'accepatation des voeux : </label>
+
+                    <input type="datetime-local"  formControlName="date_debut_lancement_voeux" class="form-control" id="date_debut_lancement_voeux" name="date_debut_lancement_voeux"
+                    [ngClass]="{'is-invalid':submitted && editVF['date_debut_lancement_voeux'].errors }" >
+                    
+
+                    <div *ngIf="submitted && editVF['date_debut_lancement_voeux'].errors" class="invalid-feedback">
+                        <div *ngIf="editVF['date_debut_lancement_voeux'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                    </div>
+
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="date_fin_lancement_voeux">Date fin d'acceptation des voeux : </label>
+
+                    <input type="datetime-local" formControlName="date_fin_lancement_voeux" class="form-control" id="date_fin_lancement_voeux" name="date_fin_lancement_voeux"
+                    [ngClass]="{'is-invalid':submitted && editVF['date_fin_lancement_voeux'].errors }"  >
+                    
+                    <div *ngIf="submitted && editVF['date_fin_lancement_voeux'].errors" class="invalid-feedback">
+                        <div *ngIf="editVF['date_fin_lancement_voeux'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                    </div>
+
+                </div>
+
+               </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        (click)="onDismiss('updateVoeux')">Annuler</button>
+
+                    <button  (click)="modifierVoeux()" class="btn btn-primary">Valider</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>

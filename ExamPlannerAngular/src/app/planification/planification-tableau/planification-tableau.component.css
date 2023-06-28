@@ -1,0 +1,47 @@
+table{
+    border: 1px solid black;
+    
+    
+ }
+ .table td, .table th {
+    font-size: 13px;
+    
+}
+
+
+ td,th{
+     border: 1px solid;
+     padding-left: 2px;
+    
+     
+ }
+ .bordure{
+     border-left: 3px solid;
+ }
+ .bordure_top{
+    border-top: 4px solid;
+}
+ .dimanche{
+     background-color: black;
+
+ }
+ .pratique{
+    background-color: rgb(250, 157, 35);
+
+}
+.examen{
+    font-weight: 600;
+}
+.examen:hover{
+    background-color:  #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: 2px #034d05;
+    cursor: grab;
+    
+}
+.ligne {
+    display: inline-block;
+     
+    }
+     

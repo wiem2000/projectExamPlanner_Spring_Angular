@@ -1,0 +1,53 @@
+<hr>
+
+
+<div class="container mt-5 mb-5" id="convocation">
+    <div style="text-align: center;">
+        <h2 class="mt-5"> Convocation pour la surveillance des examens</h2>
+        <h3> ( Session {{ planif?.type_session }} {{ planif?.date_debut|date:'MMMM yyyy' }} Semestre
+            {{planif?.semestre}} )</h3>
+        <br>
+        <h5> A l’attention de Mme/Melle/M. : <b>{{user?.prenom_pers|titlecase}} {{user?.nom_pers|titlecase}}</b> </h5>
+        <br> Vous êtes priés d’assurer la surveillance des examens, selon le calendrier ci-après :
+
+    </div>
+
+
+    <table class="table table-bordered  mt-5 mb-5 text-center " id="table1">
+        <tr style="background-color:#FFF0F5">
+            <th>######</th>
+            <th *ngFor="let s of seancesPlanif" style="background-color:#F5F5F5">{{s.heure_debut + "=>" + s.heure_fin}}
+            </th>
+        </tr>
+        <tr *ngFor="let x of dates">
+            <th class="bordure"> {{x|date:"EEEE dd MMMM yyyy"|titlecase}} </th>
+
+
+
+
+            <td [id]="getCode(x,s)" *ngFor="let s of seancesPlanif"
+                [ngClass]="{'voeux': voeuxService.getVoeuxByDateSeancePlanif(voeuxEns,x,s,planif).length >0}"></td>
+
+
+        </tr>
+
+    </table>
+    <b>NB :* </b> La case colorée indique une surveillance normale de 1,5 ou 2h dans une salle ou dans un Labo .<br> Les
+    passages concernant les examens pratiques durent 1h 15mn y compris le temps d’enregistrement des travaux.
+    <div class="mt-5 mb-5" style="border: solid; text-align: center;font-size: large; padding:5px ;"> Nous demandons aux
+        collègues de se présenter à l’administration 15 minutes avant le début de l’épreuve.</div>
+
+  
+</div> 
+<hr>
+       <div class="row mb-5">
+        <div class="col-md-10"></div>
+       
+        <div class="col">
+            <button class="buttonPink"  (click)="downloadPDF()"><i class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i>  Exporter PDF </button>
+
+        </div>
+    </div>
+
+    <button class="col btn btn-outline-danger tooltips btn-m  " routerLink="/mesVoeux"><i
+        class="fa fa-angle-double-left" aria-hidden="true"></i> Retour </button>

@@ -1,0 +1,38 @@
+<div class="container mt-4 ">
+    <h4 class="mt-4">Mes informations de surveillance </h4>
+    <hr>
+
+
+    <form class="mt-4 mb-5" #infoForm="ngForm">
+
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="nom_grade"><b> Grade: </b> </label>
+                    <input type="text" ngModel="{{user?.idGrade?.nom_grade}}" name="nom_grade" class="form-control"
+                        disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="charge_surv"><b> Charge de surveillance: </b></label>
+                    <input type="number" ngModel="{{user?.idGrade?.charge_surv}}" name="charge_surv"
+                        class="form-control" disabled>
+                </div>
+            </div>
+        
+
+        </div>
+        
+
+
+    </form>
+    
+    <router-outlet></router-outlet>
+    
+    
+    
+
+
+</div>

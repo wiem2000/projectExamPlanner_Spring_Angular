@@ -1,0 +1,26 @@
+.voeux{
+    background-color:  #4CAF50;
+    
+}
+table{
+    border: 1px solid black;
+    
+    
+ }
+ .table td, .table th {
+    font-size: 13px;
+    
+}
+
+
+ td,th{
+     border: 1px solid;
+     padding-left: 2px;
+     height: 30px;
+    
+    
+     
+ }
+ .bordure{
+     border-left: 3px solid;
+ }

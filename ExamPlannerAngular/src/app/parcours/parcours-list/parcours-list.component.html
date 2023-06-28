@@ -1,0 +1,254 @@
+<div class="container mt-4">
+    <h2> Liste des parcours </h2>
+    <hr>
+
+
+    <div class="row">
+        <div class="col ">
+            <form class="form-inline my-2 my-lg-0">
+                <div class="row">
+
+                    <div class="col-md-1">
+                        <div class="btn btn-light" style="height:45px;"><i class="fas fa-search fa-1x"></i></div>
+                    </div>
+                    <div class="col"><input type="search" style="height:45px;"
+                            (ngModelChange)="chercherParcours(key.value)" #key="ngModel" ngModel name="key" id="search"
+                            class="form-control mr-sm-2" placeholder="Chercher Parcours..." required></div>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+        <div class="col-md-3"> <button class="btn btn-outline-secondary btn-lg mb-5" (click)="addParcours()"><i
+                    class="fa fa-plus"></i>
+                Ajouter Parcours</button></div>
+    </div>
+    <div class="mt-4">
+
+        <table class="table table-hover" id="datatableexample">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"> Nom </th>
+                   
+                   
+
+                    <th scope="col" style="width: 5cm;"> Activé </th>
+
+                    <th scope="col" style="width: 5cm;"> Actions </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of parcours">
+                    <td scope="row">{{p.id_par}}</td>
+                    <td>{{p.nom_par}}</td>
+                  
+                    
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" [checked]="p.etat_par==true" type="checkbox"
+                                id="flexSwitchCheckChecked{{p.id_par}}" (click)="checkEtat(p)">
+
+
+                        </div>
+
+
+
+                    </td>
+
+
+                    <td>
+                        <div class="row">
+                            <a class="col-md-4 btn btn-outline-success tooltips btn-sm " (click)="editParcours(p)"
+                                data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pencil fa-1x"></i>
+                            </a>
+                            <!--
+                            <a class=" col btn btn-outline-danger tooltips btn-sm" (click)="deletedParcours(p)"
+                                data-toggle="tooltip" data-original-title="Delete"><i
+                                    class="fas fa-times fa-1x"></i></a>-->
+                        </div>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!--  Ajouter Parcours -->
+    <div class="modal fade" id="addParcours">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Ajouter Parcours </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('addParcours')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form (ngSubmit)="onAddParcours()" [formGroup]="addForm">
+                      
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_par">Nom Parcours : </label>
+                            <input type="text" formControlName="nom_par" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && addF['nom_par'].errors }">
+                            <div *ngIf="submitted && addF['nom_par'].errors" class="invalid-feedback">
+                                <div *ngIf="addF['nom_par'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                   
+
+                    
+
+                        <div class="form-group mt-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="etat_par">Etat : </label>
+                                </div>
+
+
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_parActive" value="option1" checked>
+                                        <label class="form-check-label" for="inlineRadio1">Activé</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_parDesactive" value="option2">
+                                        <label class="form-check-label" for="inlineRadio2">Désactivé</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('addParcours')">Annuler</button>
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  edit Parcours -->
+    <div class="modal fade" id="editParcours">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title align-center">Modifier Parcours </h4>
+                    <button type="button" class="close" data-dismiss="modal"
+                        (click)="onDismiss('editParcours')">&times;</button>
+                </div>
+
+                <div class="container">
+                    <form [formGroup]="editForm">
+                        
+                           
+               
+                           
+                         
+                        
+
+
+                        <div class="form-group mt-4">
+
+                            <label for="nom_par">Nom Parcours : </label>
+                            <input type="text" formControlName="nom_par" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && editF['nom_par'].errors }">
+                            <div *ngIf="submitted && editF['nom_par'].errors" class="invalid-feedback">
+                                <div *ngIf="editF['nom_par'].errors?.['required']">Ce champs est obligatoire</div>
+
+
+                            </div>
+
+                        </div>
+                   
+
+
+
+                        <div class="form-group mt-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="etat_par">Etat : </label>
+                                </div>
+
+
+                                <div class="col">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_parActiveEdit" value="option1"
+                                            [checked]="updateParcours?.etat_par==true">
+                                        <label class="form-check-label" for="inlineRadio1">Activé</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input form-control ml-5" type="radio"
+                                            name="inlineRadioOptions" id="etat_parDesactiveEdit" value="option2"
+                                            [checked]="updateParcours?.etat_par==false">
+                                        <label class="form-check-label" for="inlineRadio2">Désactivé</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer mt-5">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                (click)="onDismiss('editParcours')">Annuler</button>
+
+                            <button (click)="onEditParcours()" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--  Supprimer Parcours -->
+    <div class="modal fade" id="deleteParcours" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModelLabel">Supprimer Parcours</h5>
+                    <button type="button" (click)="onDismiss('deleteParcours')" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Etes vous sure de vouloir supprimer le parcours <b> {{deleteParcours?.nom_par}} </b> ?</p>
+                    <div class="modal-footer">
+                        <button type="button" (click)="onDismiss('deleteParcours')" class="btn btn-secondary"
+                            data-dismiss="modal">Annuler</button>
+                        <button (click)="onDeleteParcours(deleteParcours?.id_par)" class="btn btn-danger"
+                            data-dismiss="modal">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
