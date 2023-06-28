@@ -23,9 +23,10 @@ he Exam Scheduling System is a web application developed using Spring Boot and A
 - RESTful API design and development
 
 
-## Execution
+## Automatic Exam Scheduling Execution
 
+![generate schedulevideo](https://github.com/wiem2000/projectExamPlanner_Spring_Angular/assets/96753615/5a0b2f14-6b21-478b-aea3-999d29711e34)
 
-![video-execution_uP6ZSHJK](https://github.com/wiem2000/authentication_face_recognition/assets/96753615/a76de55b-7dcb-451a-88a0-a1272539b3f6)
+## Selection of Invigilation Preferences by Professors
 
-
+![voeux de surveillances](https://github.com/wiem2000/projectExamPlanner_Spring_Angular/assets/96753615/bc9b8bc9-b621-44c2-95b3-d8fbcb388af3)
